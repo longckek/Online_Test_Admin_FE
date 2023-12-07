@@ -52,25 +52,9 @@ export const paths = {
   },
   // AUTH
   auth: {
-    amplify: {
-      login: `${ROOTS.AUTH}/amplify/login`,
-      verify: `${ROOTS.AUTH}/amplify/verify`,
-      register: `${ROOTS.AUTH}/amplify/register`,
-      newPassword: `${ROOTS.AUTH}/amplify/new-password`,
-      forgotPassword: `${ROOTS.AUTH}/amplify/forgot-password`,
-    },
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
       register: `${ROOTS.AUTH}/jwt/register`,
-    },
-    firebase: {
-      login: `${ROOTS.AUTH}/firebase/login`,
-      verify: `${ROOTS.AUTH}/firebase/verify`,
-      register: `${ROOTS.AUTH}/firebase/register`,
-      forgotPassword: `${ROOTS.AUTH}/firebase/forgot-password`,
-    },
-    auth0: {
-      login: `${ROOTS.AUTH}/auth0/login`,
     },
   },
   authDemo: {
@@ -111,10 +95,7 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/course`,
       new: `${ROOTS.DASHBOARD}/course/new`,
       details: (id) => `${ROOTS.DASHBOARD}/course/${id}`,
-      demo: {
-        details: `${ROOTS.DASHBOARD}/course/${MOCK_ID}`,
-        edit: `${ROOTS.DASHBOARD}/course/${MOCK_ID}/edit`,
-      },
+      edit: (id) => `${ROOTS.DASHBOARD}/course/${id}/edit`,
     },
     activationCode: {
       root: `${ROOTS.DASHBOARD}/activation-code`,
@@ -124,29 +105,17 @@ export const paths = {
     contest: {
       root: `${ROOTS.DASHBOARD}/contest`,
       new: `${ROOTS.DASHBOARD}/contest/new`,
-      details: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}`,
-      demo: {
-        details: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}`,
-        edit: `${ROOTS.DASHBOARD}/contest/${MOCK_ID}/edit`,
-      },
+      details: (id) => `${ROOTS.DASHBOARD}/contest/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/contest/${id}/edit`,
     },
     round: {
       root: `${ROOTS.DASHBOARD}/round`,
       new: `${ROOTS.DASHBOARD}/round/new`,
-      details: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}`,
-      demo: {
-        details: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}`,
-        edit: `${ROOTS.DASHBOARD}/round/${MOCK_ID}/edit`,
-      },
+      details: (id) => `${ROOTS.DASHBOARD}/round/${id}`,
     },
     academicTranscript: {
       root: `${ROOTS.DASHBOARD}/academic-transcript`,
-      new: `${ROOTS.DASHBOARD}/academic-transcript/new`,
-      details: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}`,
-      demo: {
-        details: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}`,
-        edit: `${ROOTS.DASHBOARD}/academic-transcript/${MOCK_ID}/edit`,
-      },
+      details: (id) => `${ROOTS.DASHBOARD}/academic-transcript/${id}`,
     },
     // syncData: {
     //   root: `${ROOTS.DASHBOARD}/sync-data`,

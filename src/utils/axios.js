@@ -30,9 +30,30 @@ export const endpoints = {
   kanban: '/api/kanban',
   calendar: '/api/calendar',
   auth: {
-    me: '/api/auth/me',
-    login: '/api/auth/login',
-    register: '/api/auth/register',
+    me: '/admin/get-me',
+    signIn: '/auth/sign-in',
+    signOut: '/auth/sign-out',
+  },
+  course: {
+    list: '/admin/course/list',
+    details: '/admin/course/details',
+    root: '/admin/course',
+    modify: '/admin/course/mock-contest/modify'
+  },
+  contest: {
+    list: '/admin/mock-contest/list',
+    details: '/admin/mock-contest/details',
+    root: '/admin/mock-contest',
+    modify: '/admin/mock-contest/round/modify'
+  },
+  round: {
+    list: '/admin/round/list',
+    details: '/admin/round/details',
+  },
+  activationCode: {
+    list: '/admin/activation-code/list',
+    details: '/admin/activation-code/details',
+    create: '/admin/activation-code/generate',
   },
   mail: {
     list: '/api/mail/list',

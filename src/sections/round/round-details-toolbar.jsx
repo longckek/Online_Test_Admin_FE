@@ -6,13 +6,16 @@ import Button from '@mui/material/Button';
 import { RouterLink } from 'src/routes/components';
 
 import Iconify from 'src/components/iconify';
-import { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function CourseDetailsToolbar({
+export default function RoundDetailsToolbar({
+  publish,
   backLink,
+  editLink,
   liveLink,
+  publishOptions,
+  onChangePublish,
   sx,
   ...other
 }) {
@@ -37,9 +40,12 @@ export default function CourseDetailsToolbar({
   );
 }
 
-CourseDetailsToolbar.propTypes = {
+RoundDetailsToolbar.propTypes = {
   backLink: PropTypes.string,
   editLink: PropTypes.string,
   liveLink: PropTypes.string,
+  onChangePublish: PropTypes.func,
+  publish: PropTypes.string,
+  publishOptions: PropTypes.array,
   sx: PropTypes.object,
 };

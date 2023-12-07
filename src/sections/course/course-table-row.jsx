@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -20,33 +20,27 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import UserQuickEditForm from './course-quick-edit-form';
-
 // ----------------------------------------------------------------------
 
-export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }) {
-  const { company, items } = row;
+export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow }) {
+  const { id, name, price, description, createdAt, mockContest } = row;
 
   const confirm = useBoolean();
 
   const collapse = useBoolean();
 
-  const quickEdit = useBoolean();
-
   const popover = usePopover();
 
   const renderPrimary = (
-    <TableRow hover selected={selected}>
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-      TSA Danh gia tu duy
-      </TableCell>
+    <TableRow hover>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
 
-      <TableCell>{fCurrency(5000000)}</TableCell>
+      <TableCell>{fCurrency(price)}</TableCell>
 
       <TableCell>
         <ListItemText
-          primary={format(new Date("2023-11-18 19:30:36.922"), 'dd MMM yyyy')}
-          secondary={format(new Date("2023-11-18 19:30:36.922"), 'p')}
+          primary={format(new Date(createdAt), 'dd MMM yyyy')}
+          secondary={format(new Date(createdAt), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
@@ -56,9 +50,9 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
         />
       </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'break-spaces' }}>3 môn chính toán, văn, anh 3 môn chính toán, văn, anh 3 môn chính toán, văn, anh</TableCell>
+      <TableCell sx={{ whiteSpace: 'break-spaces' }}>{description}</TableCell>
 
-      <TableCell align="center">12</TableCell>
+      <TableCell align="center">{mockContest.length}</TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton
@@ -70,7 +64,7 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
             }),
           }}
         >
-          <Iconify icon="eva:arrow-ios-downward-fill" />
+          {mockContest.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />}
         </IconButton>
 
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -90,7 +84,7 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
           sx={{ bgcolor: 'background.neutral' }}
         >
           <Stack component={Paper} sx={{ m: 1.5 }}>
-            {items.map((item) => (
+            {mockContest.map((item) => (
               <Stack
                 key={item.id}
                 direction="row"
@@ -104,7 +98,7 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
               >
                 <ListItemText
                   primary={item.name}
-                  secondary={item.sku}
+                  secondary={`Tổng điểm: ${item.totalMark || 0}`}
                   primaryTypographyProps={{
                     typography: 'body2',
                   }}
@@ -115,9 +109,7 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
                   }}
                 />
 
-                <Box>x{item.quantity}</Box>
-
-                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
+                <Box sx={{ width: 110, textAlign: 'right' }}>Lượt thi: {item.maxNumAttempt}</Box>
               </Stack>
             ))}
           </Stack>
@@ -131,8 +123,6 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
       {renderPrimary}
 
       {renderSecondary}
-
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
 
       <CustomPopover
         open={popover.open}
@@ -152,7 +142,7 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
 
         <MenuItem
           onClick={() => {
-            quickEdit.onTrue();
+            onEditRow();
             popover.onClose();
           }}
         >
@@ -190,6 +180,6 @@ export default function CourseTableRow({ row, selected, onViewRow, onDeleteRow }
 CourseTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onViewRow: PropTypes.func,
+  onEditRow: PropTypes.func,
   row: PropTypes.object,
-  selected: PropTypes.bool,
 };

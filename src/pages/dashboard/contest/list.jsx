@@ -4,7 +4,7 @@ import { ContestListView } from 'src/sections/contest/view';
 
 // ----------------------------------------------------------------------
 
-export default function CourseListPage() {
+export default function ContestListPage() {
   return (
     <>
       <Helmet>

@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -12,7 +12,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { _userList, _orders } from 'src/_mock';
+import { useGetCourses, deleteCourse } from 'src/api/course';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -35,18 +35,16 @@ import CourseTableFiltersResult from '../course-table-filters-result';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'courseName', label: 'Khóa học' },
+  { id: 'name', label: 'Khóa học' },
   { id: 'price', label: 'Giá', width: 180 },
   { id: 'createdAt', label: 'Ngày tạo', width: 180 },
   { id: 'description', label: 'Miêu tả', width: 300 },
-  { id: 'countContest', label: 'Số cuộc thi', width: 120, align: 'center' },
+  { id: 'mockContest', label: 'Số cuộc thi', width: 150, align: 'center' },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  role: [],
-  status: 'all',
 };
 
 // ----------------------------------------------------------------------
@@ -58,7 +56,15 @@ export default function CourseListView() {
 
   const router = useRouter();
 
-  const [tableData, setTableData] = useState(_orders);
+  const [tableData, setTableData] = useState([]);
+
+  const { courses, coursesLoading, coursesEmpty } = useGetCourses();
+
+  useEffect(() => {
+    if (courses.length) {
+      setTableData(courses);
+    }
+  }, [courses]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -67,7 +73,6 @@ export default function CourseListView() {
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
-
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
@@ -89,13 +94,21 @@ export default function CourseListView() {
   );
 
   const handleDeleteRow = useCallback(
-    (id) => {
+    async (id) => {
+      await deleteCourse(id);
       const deleteRow = tableData.filter((row) => row.id !== id);
       setTableData(deleteRow);
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
     [dataInPage.length, table, tableData]
+  );
+
+  const handleEditRow = useCallback(
+    (id) => {
+      router.push(paths.dashboard.course.edit(id));
+    },
+    [router]
   );
 
   const handleViewRow = useCallback(
@@ -152,14 +165,7 @@ export default function CourseListView() {
                 orderBy={table.orderBy}
                 headLabel={TABLE_HEAD}
                 rowCount={tableData.length}
-                numSelected={table.selected.length}
                 onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData.map((row) => row.id)
-                  )
-                }
               />
 
               <TableBody>
@@ -172,9 +178,8 @@ export default function CourseListView() {
                     <CourseTableRow
                       key={row.id}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
+                      onEditRow={() => handleEditRow(row.id)}
                       onViewRow={() => handleViewRow(row.id)}
                     />
                   ))}
@@ -204,7 +209,7 @@ export default function CourseListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+  const { name } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -218,16 +223,8 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (course) => course.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
-  }
-
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
-  }
-
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
   }
 
   return inputData;

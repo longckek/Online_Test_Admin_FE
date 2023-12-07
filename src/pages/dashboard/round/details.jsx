@@ -2,11 +2,11 @@ import { Helmet } from 'react-helmet-async';
 
 import { useParams } from 'src/routes/hooks';
 
-import { CourseEditView } from 'src/sections/course/view';
+import { RoundDetailsView } from 'src/sections/round/view';
 
 // ----------------------------------------------------------------------
 
-export default function CourseEditPage() {
+export default function RoundDetailsPage() {
   const params = useParams();
 
   const { id } = params;
@@ -14,10 +14,10 @@ export default function CourseEditPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Course Edit</title>
+        <title> Dashboard: Round Details</title>
       </Helmet>
 
-      <CourseEditView id={`${id}`} />
+      <RoundDetailsView id={`${id}`} />
     </>
   );
 }

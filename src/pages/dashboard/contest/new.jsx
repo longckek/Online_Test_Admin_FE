@@ -4,7 +4,7 @@ import { ContestCreateView } from 'src/sections/contest/view';
 
 // ----------------------------------------------------------------------
 
-export default function CourseCreatePage() {
+export default function ContestCreatePage() {
   return (
     <>
       <Helmet>

@@ -1,27 +1,18 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
-import Collapse from '@mui/material/Collapse';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useGetRounds } from 'src/api/round'
 
-import { _userList, _orders } from 'src/_mock';
-
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -31,7 +22,6 @@ import {
   getComparator,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
 
@@ -42,14 +32,15 @@ import RoundTableFiltersResult from '../round-table-filters-result';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'roundName', label: 'Round' },
-  { id: 'maxMark', label: 'Mark', width: 120, align: 'center' },
-  { id: 'timeStart', label: 'Start', width: 150 },
-  { id: 'timeEnd', label: 'End', width: 150 },
-  { id: 'showCorrectAnswer', label: 'Correct Answer', width: 180, align: 'center' },
-  { id: 'showCorrectAnswer', label: 'Label Answer', width: 180, align: 'center' },
-  { id: 'showCorrectAnswer', label: 'Show Mark', width: 180, align: 'center' },
-  { id: 'codeTestFormGroup', label: 'Code', align: 'center' },
+  { id: 'roundName', label: 'Vòng thi' },
+  { id: 'maxMark', label: 'Điểm', width: 150, align: 'center' },
+  { id: 'timeStart', label: 'Bắt đầu', width: 150 },
+  { id: 'timeEnd', label: 'Kết thúc', width: 150 },
+  { id: 'timeAllow', label: 'Thời gian thi', width: 120, align: 'center' },
+  // { id: 'showCorrectAnswer', label: 'Hiển thị đáp án', width: 180, align: 'center' },
+  // { id: 'showCorrectAnswer', label: 'Hiển thị nhãn', width: 180, align: 'center' },
+  // { id: 'showCorrectAnswer', label: 'Hiện thị điểm', width: 180, align: 'center' },
+  { id: 'codeTestFormGroup', label: 'Code', width: 80, align: 'center' },
   { id: '', width: 88 },
 ];
 
@@ -68,9 +59,15 @@ export default function RoundListView() {
 
   const router = useRouter();
 
-  const confirm = useBoolean();
+  const [tableData, setTableData] = useState([]);
 
-  const [tableData, setTableData] = useState(_orders);
+  const { rounds, roundsLoading, roundsEmpty } = useGetRounds();
+
+  useEffect(() => {
+    if (rounds.length) {
+      setTableData(rounds);
+    }
+  }, [rounds]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -110,20 +107,9 @@ export default function RoundListView() {
     [dataInPage.length, table, tableData]
   );
 
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-    setTableData(deleteRows);
-
-    table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
-
-  const handleEditRow = useCallback(
+  const handleViewRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.course.edit(id));
+      router.push(paths.dashboard.round.details(id));
     },
     [router]
   );
@@ -133,130 +119,74 @@ export default function RoundListView() {
   }, []);
 
   return (
-    <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Round"
-          links={[]}
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        />
+    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <CustomBreadcrumbs
+        heading="Danh sách vòng thi"
+        links={[]}
+        sx={{
+          mb: { xs: 3, md: 5 },
+        }}
+      />
 
-        <Card>
-          <RoundTableToolbar
+      <Card>
+        <RoundTableToolbar filters={filters} onFilters={handleFilters} />
+
+        {canReset && (
+          <RoundTableFiltersResult
             filters={filters}
             onFilters={handleFilters}
+            //
+            onResetFilters={handleResetFilters}
+            //
+            results={dataFiltered.length}
+            sx={{ p: 2.5, pt: 0 }}
           />
+        )}
 
-          {canReset && (
-            <RoundTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="medium" sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={table.order}
+                orderBy={table.orderBy}
+                headLabel={TABLE_HEAD}
+                rowCount={tableData.length}
+                onSort={table.onSort}
+              />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
+              <TableBody>
+                {dataFiltered
+                  .slice(
+                    table.page * table.rowsPerPage,
+                    table.page * table.rowsPerPage + table.rowsPerPage
+                  )
+                  .map((row) => (
+                    <RoundTableRow
+                      key={row.id}
+                      row={row}
+                      onViewRow={() => handleViewRow(row.id)}
+                    />
+                  ))}
 
-            <Scrollbar>
-              <Table size='medium' sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                <TableEmptyRows
+                  emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
                 />
 
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <RoundTableRow
-                        key={row.id}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                      />
-                    ))}
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-                  <TableEmptyRows
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-          />
-        </Card>
-      </Container>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-    </>
+        <TablePaginationCustom
+          count={dataFiltered.length}
+          page={table.page}
+          rowsPerPage={table.rowsPerPage}
+          onPageChange={table.onChangePage}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
+      </Card>
+    </Container>
   );
 }
 

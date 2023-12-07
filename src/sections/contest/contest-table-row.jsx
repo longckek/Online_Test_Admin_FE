@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -15,38 +14,31 @@ import Paper from '@mui/material/Paper';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fCurrency } from 'src/utils/format-number';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import UserQuickEditForm from './contest-quick-edit-form';
-
 // ----------------------------------------------------------------------
 
-export default function ContestTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { company, items } = row;
+export default function ContestTableRow({ row, onDeleteRow, onEditRow}) {
+  const { createdAt, maxNumAttempt, name, totalMark, round } = row;
 
   const confirm = useBoolean();
 
   const collapse = useBoolean();
 
-  const quickEdit = useBoolean();
-
   const popover = usePopover();
 
   const renderPrimary = (
-    <TableRow hover selected={selected}>
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-      TSA Danh gia tu duy
-      </TableCell>
+    <TableRow hover>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
 
-      <TableCell align="center">200</TableCell>
+      <TableCell align="center">{totalMark || 0}</TableCell>
 
       <TableCell>
         <ListItemText
-          primary={format(new Date("2023-11-18 19:30:36.922"), 'dd MMM yyyy')}
-          secondary={format(new Date("2023-11-18 19:30:36.922"), 'p')}
+          primary={format(new Date(createdAt), 'dd MMM yyyy')}
+          secondary={format(new Date(createdAt), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
@@ -56,9 +48,9 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
         />
       </TableCell>
 
-      <TableCell align="center">200</TableCell>
+      <TableCell align="center">{maxNumAttempt}</TableCell>
 
-      <TableCell align="center">12</TableCell>
+      <TableCell align="center">{round.length}</TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton
@@ -70,7 +62,7 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
             }),
           }}
         >
-          <Iconify icon="eva:arrow-ios-downward-fill" />
+          { round.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />}
         </IconButton>
 
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -90,7 +82,7 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
           sx={{ bgcolor: 'background.neutral' }}
         >
           <Stack component={Paper} sx={{ m: 1.5 }}>
-            {items.map((item) => (
+            {round.map((item) => (
               <Stack
                 key={item.id}
                 direction="row"
@@ -103,8 +95,8 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
                 }}
               >
                 <ListItemText
-                  primary={item.name}
-                  secondary={item.sku}
+                  primary={item.aliasRound.name}
+                  secondary={item.name}
                   primaryTypographyProps={{
                     typography: 'body2',
                   }}
@@ -115,9 +107,11 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
                   }}
                 />
 
-                <Box>x{item.quantity}</Box>
+                <Box sx={{ width: 150, textAlign: 'left' }}>Thời gian: {item.timeAllow} phút</Box>
 
-                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
+                <Box sx={{ width: 150, textAlign: 'right' }}>Điểm: {item.maxMark}</Box>
+
+                <Box sx={{ width: 110, textAlign: 'right' }}>{item.codeTestFormGroup}</Box>
               </Stack>
             ))}
           </Stack>
@@ -132,8 +126,6 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
 
       {renderSecondary}
 
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -142,23 +134,12 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
       >
         <MenuItem
           onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          View
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            // onEditRow();
-            quickEdit.onTrue();
+            onEditRow();
             popover.onClose();
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          Sửa
         </MenuItem>
 
         <MenuItem
@@ -169,18 +150,18 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          Xóa
         </MenuItem>
       </CustomPopover>
 
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
+        title="Xóa"
+        content="Bạn có muốn xóa cuộc thi này không?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
+            Xóa
           </Button>
         }
       />
@@ -191,7 +172,5 @@ export default function ContestTableRow({ row, selected, onEditRow, onSelectRow,
 ContestTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
   row: PropTypes.object,
-  selected: PropTypes.bool,
 };

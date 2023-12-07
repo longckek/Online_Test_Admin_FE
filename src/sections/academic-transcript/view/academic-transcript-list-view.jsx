@@ -3,25 +3,18 @@ import { useState, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
-import Collapse from '@mui/material/Collapse';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/use-boolean';
-
 import { _userList, _orders } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -31,7 +24,6 @@ import {
   getComparator,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
 
@@ -65,8 +57,6 @@ export default function AcademicTranscriptListView() {
 
   const router = useRouter();
 
-  const confirm = useBoolean();
-
   const [tableData, setTableData] = useState(_orders);
 
   const [filters, setFilters] = useState(defaultFilters);
@@ -97,30 +87,9 @@ export default function AcademicTranscriptListView() {
     [table]
   );
 
-  const handleDeleteRow = useCallback(
+  const handleViewRow = useCallback(
     (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
-
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-    setTableData(deleteRows);
-
-    table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
-
-  const handleEditRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.course.edit(id));
+      router.push(paths.dashboard.academicTranscript.details(id));
     },
     [router]
   );
@@ -130,140 +99,74 @@ export default function AcademicTranscriptListView() {
   }, []);
 
   return (
-    <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Courses"
-          links={[]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.course.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New Course
-            </Button>
-          }
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        />
+    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Card>
+        <AcademicTranscriptTableToolbar filters={filters} onFilters={handleFilters} />
 
-        <Card>
-          <AcademicTranscriptTableToolbar
+        {canReset && (
+          <AcademicTranscriptTableFiltersResult
             filters={filters}
             onFilters={handleFilters}
+            //
+            onResetFilters={handleResetFilters}
+            //
+            results={dataFiltered.length}
+            sx={{ p: 2.5, pt: 0 }}
           />
+        )}
 
-          {canReset && (
-            <AcademicTranscriptTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="medium" sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={table.order}
+                orderBy={table.orderBy}
+                headLabel={TABLE_HEAD}
+                rowCount={tableData.length}
+                numSelected={table.selected.length}
+                onSort={table.onSort}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    tableData.map((row) => row.id)
+                  )
+                }
+              />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
+              <TableBody>
+                {dataFiltered
+                  .slice(
+                    table.page * table.rowsPerPage,
+                    table.page * table.rowsPerPage + table.rowsPerPage
+                  )
+                  .map((row) => (
+                    <AcademicTranscriptTableRow
+                      key={row.id}
+                      row={row}
+                      selected={table.selected.includes(row.id)}
+                      onViewRow={() => handleViewRow(row.id)}
+                    />
+                  ))}
 
-            <Scrollbar>
-              <Table size='medium' sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                <TableEmptyRows
+                  emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
                 />
 
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <AcademicTranscriptTableRow
-                        key={row.id}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                      />
-                    ))}
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-                  <TableEmptyRows
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-          />
-        </Card>
-      </Container>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-    </>
+        <TablePaginationCustom
+          count={dataFiltered.length}
+          page={table.page}
+          rowsPerPage={table.rowsPerPage}
+          onPageChange={table.onChangePage}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
+      </Card>
+    </Container>
   );
 }
 

@@ -10,32 +10,35 @@ import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 
 import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
 
 import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function CourseDetailsContent({ course }) {
-  console.log('winter-course: ', course);
-  const { createdAt, description, mockContest, name, price } = course;
+export default function RoundDetailsContent({ job }) {
+  const {
+    skills,
+    createdAt,
+    employmentTypes,
+  } = job;
 
   const renderContent = (
     <Stack component={Card} spacing={3} sx={{ p: 3 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4">{name}</Typography>
+        <Typography variant="h4">TSA Danh gia tu duy</Typography>
         <IconButton>
           <Iconify icon="solar:pen-bold" />
         </IconButton>
       </Box>
       <Typography variant="h6">Miêu tả</Typography>
-      <Typography variant="body1">{description}</Typography>
+      <Typography variant="body1">3 môn chính toán, văn, anh</Typography>
+      {/* <Markdown children={content} /> */}
 
       <Stack spacing={2}>
         <Typography variant="h6">Cuộc thi: </Typography>
         <Stack direction="column" alignItems="start" spacing={1}>
-          {mockContest.map((item) => (
-            <Chip key={item.id} label={item.name} variant="soft" />
+          {skills.map((skill) => (
+            <Chip key={skill} label={skill} variant="soft" />
           ))}
         </Stack>
       </Stack>
@@ -47,8 +50,8 @@ export default function CourseDetailsContent({ course }) {
       {[
         {
           label: 'Giá',
-          value: fCurrency(price),
-          icon: <Iconify icon="solar:tag-price-bold" />,
+          value: employmentTypes,
+          icon: <Iconify icon="solar:clock-circle-bold" />,
         },
         {
           label: 'Ngày khởi tạo',
@@ -58,7 +61,7 @@ export default function CourseDetailsContent({ course }) {
         {
           label: 'Người tạo',
           value: 'Vatlysieunham@gmail.com',
-          icon: <Iconify icon="solar:user-circle-bold" />,
+          icon: <Iconify icon="solar:clock-circle-bold" />,
         },
       ].map((item) => (
         <Stack key={item.label} spacing={1.5} direction="row">
@@ -95,6 +98,6 @@ export default function CourseDetailsContent({ course }) {
   );
 }
 
-CourseDetailsContent.propTypes = {
-  course: PropTypes.object,
+RoundDetailsContent.propTypes = {
+  job: PropTypes.object,
 };

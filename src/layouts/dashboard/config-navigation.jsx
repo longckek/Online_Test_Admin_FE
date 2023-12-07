@@ -72,54 +72,33 @@ export function useNavData() {
         items: [
           // COURSE
           {
-            title: t('course'),
+            title: t('khóa học'),
             path: paths.dashboard.course.root,
             icon: ICONS.user,
           },
           // ACTIVATION CODE
           {
-            title: t('activation code'),
+            title: t('mã kích hoạt'),
             path: paths.dashboard.activationCode.root,
             icon: ICONS.user,
           },
           // CONTEST
           {
-            title: t('contest'),
+            title: t('cuộc thi'),
             path: paths.dashboard.contest.root,
             icon: ICONS.user,
-            children: [
-              { title: t('list'), path: paths.dashboard.contest.root },
-              {
-                title: t('details'),
-                path: paths.dashboard.product.demo.details,
-              },
-            ],
           },
           // ROUND
           {
-            title: t('round'),
+            title: t('vòng thi'),
             path: paths.dashboard.round.root,
             icon: ICONS.user,
-            children: [
-              { title: t('list'), path: paths.dashboard.round.root },
-              {
-                title: t('details'),
-                path: paths.dashboard.product.demo.details,
-              },
-            ],
           },
           // ACADEMIC TRANSCRIPT
           {
-            title: t('academic transcript'),
+            title: t('bảng điểm'),
             path: paths.dashboard.academicTranscript.root,
             icon: ICONS.user,
-            children: [
-              { title: t('list'), path: paths.dashboard.academicTranscript.root },
-              {
-                title: t('details'),
-                path: paths.dashboard.product.demo.details,
-              },
-            ],
           },
           // // SYNC DATA
           // {

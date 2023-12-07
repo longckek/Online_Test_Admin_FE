@@ -12,9 +12,6 @@ import { useAuthContext } from '../hooks';
 
 const loginPaths = {
   jwt: paths.auth.jwt.login,
-  auth0: paths.auth.auth0.login,
-  amplify: paths.auth.amplify.login,
-  firebase: paths.auth.firebase.login,
 };
 
 // ----------------------------------------------------------------------
@@ -47,6 +44,7 @@ function Container({ children }) {
       const loginPath = loginPaths[method];
 
       const href = `${loginPath}?${searchParams}`;
+      console.log('winter-href', href);
       router.replace(href);
     } else {
       setChecked(true);

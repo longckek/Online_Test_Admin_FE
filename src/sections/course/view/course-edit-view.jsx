@@ -2,43 +2,31 @@ import PropTypes from 'prop-types';
 
 import Container from '@mui/material/Container';
 
-import { paths } from 'src/routes/paths';
-
-import { _userList } from 'src/_mock';
+import { useGetCourse } from 'src/api/course'
 
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import UserNewEditForm from '../course-new-edit-form';
+import CourseNewEditForm from '../course-new-edit-form';
 
 // ----------------------------------------------------------------------
 
 export default function CourseEditView({ id }) {
   const settings = useSettingsContext();
 
-  const currentUser = _userList.find((user) => user.id === id);
+  const { course: currentCourse } = useGetCourse(id);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Edit"
-        links={[
-          {
-            name: 'Dashboard',
-            href: paths.dashboard.root,
-          },
-          {
-            name: 'User',
-            href: paths.dashboard.course.root,
-          },
-          { name: currentUser?.name },
-        ]}
+        heading="Sửa thông tin khóa học"
+        links={[]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
       />
 
-      <UserNewEditForm currentUser={currentUser} />
+      <CourseNewEditForm currentCourse={currentCourse} />
     </Container>
   );
 }

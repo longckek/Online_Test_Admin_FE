@@ -11,11 +11,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fCurrency } from 'src/utils/format-number';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
@@ -24,9 +24,14 @@ import UserQuickEditForm from './round-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { company, items } = row;
-
+export default function RoundTableRow({ row, onViewRow }) {
+  const { codeTestFormGroup, maxMark, name, showCorrectAnswer, showLabelAnswer, showMark, timeStart, timeEnd, timeAllow} = row;
+  console.log('winter-round-row: ', row);
+  const showOptions = [
+    { label: 'Hiện thị đáp án', value: showCorrectAnswer },
+    { label: 'Hiện thị nhãn', value: showLabelAnswer },
+    { label: 'Hiện thị điểm', value: showMark },
+  ]
   const confirm = useBoolean();
 
   const collapse = useBoolean();
@@ -36,17 +41,15 @@ export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, o
   const popover = usePopover();
 
   const renderPrimary = (
-    <TableRow hover selected={selected}>
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-      TSA Danh gia tu duy
-      </TableCell>
+    <TableRow hover>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
 
-      <TableCell align="center">100</TableCell>
+      <TableCell align="center">{maxMark}</TableCell>
 
       <TableCell>
         <ListItemText
-          primary={format(new Date("2023-11-18 19:30:36.922"), 'dd MMM yyyy')}
-          secondary={format(new Date("2023-11-18 19:30:36.922"), 'p')}
+          primary={format(new Date(timeStart), 'dd MMM yyyy')}
+          secondary={format(new Date(timeStart), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
@@ -58,8 +61,8 @@ export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, o
 
       <TableCell>
         <ListItemText
-          primary={format(new Date("2023-11-18 19:30:36.922"), 'dd MMM yyyy')}
-          secondary={format(new Date("2023-11-18 19:30:36.922"), 'p')}
+          primary={format(new Date(timeEnd), 'dd MMM yyyy')}
+          secondary={format(new Date(timeEnd), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
@@ -69,12 +72,22 @@ export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, o
         />
       </TableCell>
 
-      <TableCell align="center">12</TableCell>
-      <TableCell align="center">12</TableCell>
-      <TableCell align="center">12</TableCell>
-      <TableCell align="center">123456</TableCell>
+      <TableCell align="center">{timeAllow} phút</TableCell>
+      <TableCell align="center">{codeTestFormGroup}</TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <IconButton
+          color={collapse.value ? 'inherit' : 'default'}
+          onClick={collapse.onToggle}
+          sx={{
+            ...(collapse.value && {
+              bgcolor: 'action.hover',
+            }),
+          }}
+        >
+          <Iconify icon="eva:arrow-ios-downward-fill" />
+        </IconButton>
+
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
           <Iconify icon="eva:more-vertical-fill" />
         </IconButton>
@@ -92,9 +105,7 @@ export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, o
           sx={{ bgcolor: 'background.neutral' }}
         >
           <Stack component={Paper} sx={{ m: 1.5 }}>
-            {items.map((item) => (
               <Stack
-                key={item.id}
                 direction="row"
                 alignItems="center"
                 sx={{
@@ -103,30 +114,25 @@ export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, o
                     borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
                   },
                 }}
-              >
+            >
+              {showOptions.map((item, index) => (
                 <ListItemText
-                  primary={item.name}
-                  secondary={item.sku}
+                  key={index}
+                  primary={item.label}
+                  secondary={<Checkbox checked={item.value} />}
                   primaryTypographyProps={{
                     typography: 'body2',
                   }}
-                  secondaryTypographyProps={{
-                    component: 'span',
-                    color: 'text.disabled',
-                    mt: 0.5,
-                  }}
+                  sx={{ textAlign: "center"}}
                 />
-
-                <Box>x{item.quantity}</Box>
-
-                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
-              </Stack>
-            ))}
+              ))}
+            </Stack>
           </Stack>
         </Collapse>
       </TableCell>
     </TableRow>
   )
+
 
   return (
     <>
@@ -162,38 +168,12 @@ export default function RoundTableRow({ row, selected, onEditRow, onSelectRow, o
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
       </CustomPopover>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }
 
 RoundTableRow.propTypes = {
-  onDeleteRow: PropTypes.func,
-  onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
+  onViewRow: PropTypes.func,
   row: PropTypes.object,
-  selected: PropTypes.bool,
 };

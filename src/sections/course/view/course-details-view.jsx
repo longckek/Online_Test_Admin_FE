@@ -4,29 +4,48 @@ import { useState, useCallback } from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
+import { useGetCourse } from 'src/api/course'
 import { _jobs, JOB_DETAILS_TABS, JOB_PUBLISH_OPTIONS } from 'src/_mock';
 
+import Iconify from 'src/components/iconify';
+import EmptyContent from 'src/components/empty-content';
 import Label from 'src/components/label';
 import { useSettingsContext } from 'src/components/settings';
 
+import { CourseDetailsSkeleton } from '../course-skeleton'
 import CourseDetailsToolbar from '../course-details-toolbar';
 import CourseDetailsContent from '../course-details-content';
 
 // ----------------------------------------------------------------------
 
 export default function CourseDetailsView({ id }) {
+  const { course, courseLoading, courseError } = useGetCourse(id)
   const settings = useSettingsContext();
 
-  const currentJob = _jobs.filter((job) => job.id === id)[0];
+  const renderSkeleton = <CourseDetailsSkeleton />;
 
-  const [publish, setPublish] = useState(currentJob?.publish);
-
-  const handleChangePublish = useCallback((newValue) => {
-    setPublish(newValue);
-  }, []);
+  const renderError = (
+    <EmptyContent
+      filled
+      title={`${courseError?.message}`}
+      action={
+        <Button
+          component={RouterLink}
+          href={paths.dashboard.course.root}
+          startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
+          sx={{ mt: 3 }}
+        >
+          Back to List
+        </Button>
+      }
+      sx={{ py: 10 }}
+    />
+  );
 
   const renderTabs = (
     <Tabs
@@ -44,19 +63,25 @@ export default function CourseDetailsView({ id }) {
     </Tabs>
   );
 
-  return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+  const renderCourse = course && (
+    <>
       <CourseDetailsToolbar
         backLink={paths.dashboard.course.root}
-        editLink={paths.dashboard.job.edit(`${currentJob?.id}`)}
         liveLink="#"
-        publish={publish || ''}
-        onChangePublish={handleChangePublish}
-        publishOptions={JOB_PUBLISH_OPTIONS}
       />
       {renderTabs}
 
-      <CourseDetailsContent job={currentJob} />
+      <CourseDetailsContent course={course} />
+    </>
+  )
+
+  return (
+    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      {courseLoading && renderSkeleton}
+
+      {courseError && renderError}
+
+      {course && renderCourse}
     </Container>
   );
 }

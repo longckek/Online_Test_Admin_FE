@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -17,14 +16,11 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fCurrency } from 'src/utils/format-number';
 import Iconify from 'src/components/iconify';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
-import UserQuickEditForm from './academic-transcript-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function AcademicTranscriptTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function AcademicTranscriptTableRow({ row, selected, onViewRow }) {
   const { company, items } = row;
 
   const confirm = useBoolean();
@@ -132,8 +128,6 @@ export default function AcademicTranscriptTableRow({ row, selected, onEditRow, o
 
       {renderSecondary}
 
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -149,49 +143,13 @@ export default function AcademicTranscriptTableRow({ row, selected, onEditRow, o
           <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            // onEditRow();
-            quickEdit.onTrue();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:pen-bold" />
-          Edit
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
       </CustomPopover>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }
 
 AcademicTranscriptTableRow.propTypes = {
-  onDeleteRow: PropTypes.func,
-  onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
+  onViewRow: PropTypes.func,
   row: PropTypes.object,
   selected: PropTypes.bool,
 };

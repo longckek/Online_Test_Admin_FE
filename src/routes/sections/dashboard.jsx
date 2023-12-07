@@ -43,12 +43,10 @@ const ContestCreatePage = lazy(() => import('src/pages/dashboard/contest/new'));
 const ContestEditPage = lazy(() => import('src/pages/dashboard/contest/edit'));
 // ROUND
 const RoundListPage = lazy(() => import('src/pages/dashboard/round/list'));
-const RoundCreatePage = lazy(() => import('src/pages/dashboard/round/new'));
-const RoundEditPage = lazy(() => import('src/pages/dashboard/round/edit'));
+const RoundDetailsPage = lazy(() => import('src/pages/dashboard/round/details'));
 // ACADEMIC TRANSCRIPT
 const AcademicTranscriptListPage = lazy(() => import('src/pages/dashboard/academic-transcript/list'));
-const AcademicTranscriptCreatePage = lazy(() => import('src/pages/dashboard/academic-transcript/new'));
-const AcademicTranscriptEditPage = lazy(() => import('src/pages/dashboard/academic-transcript/edit'));
+const AcademicTranscriptDetailsPage = lazy(() => import('src/pages/dashboard/academic-transcript/details'));
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -82,13 +80,13 @@ export const dashboardRoutes = [
   {
     path: 'dashboard',
     element: (
-      // <AuthGuard>
+      <AuthGuard>
         <DashboardLayout>
           <Suspense fallback={<LoadingScreen />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
-      // </AuthGuard>
+      </AuthGuard>
     ),
     children: [
       { element: <IndexPage />, index: true },
@@ -116,7 +114,6 @@ export const dashboardRoutes = [
         children: [
           { element: <ContestListPage />, index: true },
           { path: 'list', element: <ContestListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
           { path: 'new', element: <ContestCreatePage /> },
           { path: ':id/edit', element: <ContestEditPage /> },
         ],
@@ -126,19 +123,15 @@ export const dashboardRoutes = [
         children: [
           { element: <RoundListPage />, index: true },
           { path: 'list', element: <RoundListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'new', element: <RoundCreatePage /> },
-          { path: ':id/edit', element: <RoundEditPage /> },
+          { path: ':id', element: <RoundDetailsPage /> },
         ],
       },
       {
         path: 'academic-transcript',
         children: [
-          { element: <ContestListPage />, index: true },
+          { element: <AcademicTranscriptListPage />, index: true },
           { path: 'list', element: <AcademicTranscriptListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'new', element: <AcademicTranscriptCreatePage /> },
-          { path: ':id/edit', element: <AcademicTranscriptEditPage /> },
+          { path: ':id', element: <AcademicTranscriptDetailsPage /> },
         ],
       },
       {

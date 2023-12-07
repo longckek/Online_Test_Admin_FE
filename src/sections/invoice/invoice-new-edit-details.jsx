@@ -28,6 +28,10 @@ export default function InvoiceNewEditDetails() {
     name: 'items',
   });
 
+    console.log('winter-fields: ', fields);
+    console.log('winter-append: ', append);
+    console.log('winter-remove: ', remove);
+
   const values = watch();
 
   const totalOnRow = values.items.map((item) => item.quantity * item.price);

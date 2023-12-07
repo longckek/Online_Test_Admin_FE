@@ -5,7 +5,6 @@ import { HomeView } from 'src/sections/home/view';
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
-  window.location.replace('/dashboard/course')
 
   return (
     <>

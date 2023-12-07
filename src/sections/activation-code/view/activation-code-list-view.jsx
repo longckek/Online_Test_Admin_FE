@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -8,11 +8,14 @@ import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { _userList, _orders } from 'src/_mock';
+import { useGetListActivationCode } from 'src/api/activation-code';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -31,11 +34,12 @@ import {
 import ActivationCodeTableRow from '../activation-code-table-row';
 import ActivationCodeTableToolbar from '../activation-code-table-toolbar';
 import ActivationCodeTableFiltersResult from '../activation-code-table-filters-result';
+import ActivationCodeQuickNewForm from '../activation-code-quick-new-form';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'code', label: 'Code' },
+  { id: 'name', label: 'Code' },
   { id: 'creator', label: 'Người tạo', width: 280 },
   { id: 'course', label: 'Khóa học', width: 210 },
   { id: 'date', label: 'Ngày kích hoạt', width: 180 },
@@ -56,9 +60,19 @@ export default function ActivationCodeListView() {
 
   const settings = useSettingsContext();
 
+  const quickNew = useBoolean();
+
   const router = useRouter();
 
-  const [tableData, setTableData] = useState(_orders);
+  const [tableData, setTableData] = useState([]);
+
+  const { activationCode, activationCodeLoading, activationCodeEmpty } = useGetListActivationCode();
+
+  useEffect(() => {
+    if (activationCode.length) {
+      setTableData(activationCode);
+    }
+  }, [activationCode]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -110,93 +124,90 @@ export default function ActivationCodeListView() {
   }, []);
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
-        heading="Mã kích hoạt"
-        links={[]}
-        action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.activationCode.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            Tạo mã kích hoạt
-          </Button>
-        }
-        sx={{
-          mb: { xs: 3, md: 5 },
-        }}
-      />
+    <>
+      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="Mã kích hoạt"
+          links={[]}
+          action={
+            <Button
+              component={RouterLink}
+              onClick={() => {
+                quickNew.onTrue();
+              }}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              Tạo mã kích hoạt
+            </Button>
+          }
+          sx={{
+            mb: { xs: 3, md: 5 },
+          }}
+        />
 
-      <Card>
-        <ActivationCodeTableToolbar filters={filters} onFilters={handleFilters} />
+        <Card>
+          <ActivationCodeTableToolbar filters={filters} onFilters={handleFilters} />
 
-        {canReset && (
-          <ActivationCodeTableFiltersResult
-            filters={filters}
-            onFilters={handleFilters}
-            //
-            onResetFilters={handleResetFilters}
-            //
-            results={dataFiltered.length}
-            sx={{ p: 2.5, pt: 0 }}
-          />
-        )}
+          {canReset && (
+            <ActivationCodeTableFiltersResult
+              filters={filters}
+              onFilters={handleFilters}
+              //
+              onResetFilters={handleResetFilters}
+              //
+              results={dataFiltered.length}
+              sx={{ p: 2.5, pt: 0 }}
+            />
+          )}
 
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size="medium" sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={table.order}
-                orderBy={table.orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={tableData.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData.map((row) => row.id)
-                  )
-                }
-              />
-
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
-                    <ActivationCodeTableRow
-                      key={row.id}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
-                      onViewRow={() => handleViewRow(row.id)}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table size="medium" sx={{ minWidth: 960 }}>
+                <TableHeadCustom
+                  order={table.order}
+                  orderBy={table.orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={tableData.length}
+                  onSort={table.onSort}
                 />
 
-                <TableNoData notFound={notFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
+                <TableBody>
+                  {dataFiltered
+                    .slice(
+                      table.page * table.rowsPerPage,
+                      table.page * table.rowsPerPage + table.rowsPerPage
+                    )
+                    .map((row) => (
+                      <ActivationCodeTableRow
+                        key={row.id}
+                        row={row}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        onViewRow={() => handleViewRow(row.id)}
+                      />
+                    ))}
 
-        <TablePaginationCustom
-          count={dataFiltered.length}
-          page={table.page}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
-      </Card>
-    </Container>
+                  <TableEmptyRows
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                  />
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          <TablePaginationCustom
+            count={dataFiltered.length}
+            page={table.page}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        </Card>
+      </Container>
+      <ActivationCodeQuickNewForm open={quickNew.value} onClose={quickNew.onFalse} />
+    </>
   );
 }
 
@@ -214,10 +225,9 @@ function applyFilter({ inputData, comparator, filters }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
   if (name) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (activationCode) => activationCode.codeActive.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
