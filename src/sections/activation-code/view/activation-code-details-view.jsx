@@ -2,13 +2,12 @@ import PropTypes from 'prop-types';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { _jobs, JOB_PUBLISH_OPTIONS } from 'src/_mock';
 import { useGetActivationCode } from 'src/api/activation-code'
 
 import Iconify from 'src/components/iconify';

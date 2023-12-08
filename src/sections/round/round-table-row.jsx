@@ -1,23 +1,19 @@
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
+import Collapse from '@mui/material/Collapse';
+import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import Iconify from 'src/components/iconify';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 import RoundQuickEditForm from './round-quick-edit-form';
@@ -31,8 +27,6 @@ export default function RoundTableRow({ row, onViewRow }) {
     { label: 'Hiện thị nhãn', value: showLabelAnswer },
     { label: 'Hiện thị điểm', value: showMark },
   ]
-  const confirm = useBoolean();
-
   const collapse = useBoolean();
 
   const quickEdit = useBoolean();

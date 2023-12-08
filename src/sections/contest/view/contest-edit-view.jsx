@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 import Container from '@mui/material/Container';
 
-import { _userList } from 'src/_mock';
 import { useGetContest } from 'src/api/contest'
 
 import { useSettingsContext } from 'src/components/settings';

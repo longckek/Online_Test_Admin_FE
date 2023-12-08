@@ -1,9 +1,9 @@
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
-import { useMemo, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import slugify from 'slugify';
+import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
+import { useMemo, useEffect } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -14,6 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
 import { createCourse, updateCourse } from 'src/api/course';
 
 import { useSnackbar } from 'src/components/snackbar';
@@ -61,8 +62,6 @@ export default function CourseNewEditForm({ currentCourse }) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
 
   useEffect(() => {
     if (currentCourse) {

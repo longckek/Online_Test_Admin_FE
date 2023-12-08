@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 
 import { usePathname } from 'src/routes/hooks';
 
-import Footer from './footer';
 import Header from './header';
 
 // ----------------------------------------------------------------------
@@ -29,8 +28,6 @@ export default function MainLayout({ children }) {
       >
         {children}
       </Box>
-
-      <Footer />
     </Box>
   );
 }

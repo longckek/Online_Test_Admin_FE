@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -8,13 +8,13 @@ import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 
-import { useBoolean } from 'src/hooks/use-boolean';
-
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { useGetListActivationCode, deleteActivationCode } from 'src/api/activation-code';
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import { deleteActivationCode, useGetListActivationCode } from 'src/api/activation-code';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -32,8 +32,8 @@ import {
 
 import ActivationCodeTableRow from '../activation-code-table-row';
 import ActivationCodeTableToolbar from '../activation-code-table-toolbar';
-import ActivationCodeTableFiltersResult from '../activation-code-table-filters-result';
 import ActivationCodeQuickNewForm from '../activation-code-quick-new-form';
+import ActivationCodeTableFiltersResult from '../activation-code-table-filters-result';
 
 // ----------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ export default function ActivationCodeListView() {
 
   const [tableData, setTableData] = useState([]);
 
-  const { activationCode, activationCodeLoading, activationCodeEmpty } = useGetListActivationCode();
+  const { activationCode } = useGetListActivationCode();
 
   useEffect(() => {
     if (activationCode.length) {

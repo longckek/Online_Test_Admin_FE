@@ -1,30 +1,30 @@
 import * as Yup from 'yup';
-import { useMemo, useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import MenuItem from '@mui/material/MenuItem';
 
 import { useGetCourses } from 'src/api/course';
 import { generateActivationCode } from 'src/api/activation-code'
 
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import FormProvider, { RHFSelect } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export default function ActivationCodeQuickNewForm({ open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { courses, coursesLoading, coursesEmpty } = useGetCourses();
+  const { courses } = useGetCourses();
 
   const [courseOptions, setCourseOptions] = useState([]);
 

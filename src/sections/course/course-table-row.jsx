@@ -1,21 +1,21 @@
 import { format } from 'date-fns';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import Collapse from '@mui/material/Collapse';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fCurrency } from 'src/utils/format-number';
+
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
@@ -23,7 +23,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow }) {
-  const { id, name, price, description, createdAt, mockContest } = row;
+  const { name, price, description, createdAt, mockContest } = row;
 
   const confirm = useBoolean();
 

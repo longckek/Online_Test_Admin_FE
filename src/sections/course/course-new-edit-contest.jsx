@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import { useEffect, useCallback, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -17,9 +16,9 @@ import { RHFSelect } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function CourseNewEditContest() {
-  const { contests, contestsLoading, contestsEmpty } = useGetContests();
+  const { contests } = useGetContests();
 
-  const { control, setValue, watch, resetField } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   const [contestOptions, setContestOptions] = useState([]);
 
@@ -34,7 +33,6 @@ export default function CourseNewEditContest() {
     name: 'contests',
   });
 
-  const values = watch();
   const handleAdd = () => {
     append({
       name: '',

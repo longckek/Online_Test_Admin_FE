@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -58,7 +58,7 @@ export default function RoundListView() {
 
   const [tableData, setTableData] = useState([]);
 
-  const { rounds, roundsLoading, roundsEmpty } = useGetRounds();
+  const { rounds } = useGetRounds();
 
   useEffect(() => {
     if (rounds.length) {
@@ -74,11 +74,6 @@ export default function RoundListView() {
     filters,
   });
 
-  const dataInPage = dataFiltered.slice(
-    table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
-  );
-
   const canReset = !isEqual(defaultFilters, filters);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
@@ -92,16 +87,6 @@ export default function RoundListView() {
       }));
     },
     [table]
-  );
-
-  const handleDeleteRow = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
   );
 
   const handleViewRow = useCallback(
