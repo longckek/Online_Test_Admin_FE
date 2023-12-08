@@ -17,7 +17,7 @@ export default function ConfirmDialog({ title, content, action, open, onClose, .
 
       <DialogActions>
         <Button variant="outlined" color="inherit" onClick={onClose}>
-          Huy
+          Hủy
         </Button>
 
         {action}

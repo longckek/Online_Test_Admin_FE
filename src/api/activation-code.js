@@ -23,17 +23,17 @@ export function useGetListActivationCode() {
   return memoizedValue;
 }
 
-export function useGetCourse(courseId) {
-  const URL = courseId ? `${endpoints.course.details}/${courseId}` : '';
+export function useGetActivationCode(activationCodeId) {
+  const URL = activationCodeId ? `${endpoints.activationCode.details}/${activationCodeId}` : '';
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({
-      course: data?.result,
-      courseLoading: isLoading,
-      courseError: error,
-      courseValidating: isValidating,
+      activationCode: data?.result,
+      activationCodeLoading: isLoading,
+      activationCodeError: error,
+      activationCodeValidating: isValidating,
     }),
     [data?.result, error, isLoading, isValidating]
   );
@@ -61,4 +61,22 @@ export async function generateActivationCode(eventData) {
       result: newResult,
     };
   }, false);
+}
+
+export async function deleteActivationCode(activationCodeId) {
+  const URLdelete = activationCodeId ? `${endpoints.activationCode.root}/${activationCodeId}` : '';
+  const URLlist = [endpoints.activationCode.list, { params: { limit: 10000 }}];
+
+  await axios.delete(URLdelete);
+
+  mutate(URLlist, (currentData) => {
+    if(!currentData) return currentData
+    const newResult = currentData.result.filter(item => item.id !== activationCodeId)
+    const newMetadata = {...currentData.metadata, total: newResult.length}
+    return {
+      ...currentData,
+      metadata: newMetadata,
+      result: newResult,
+    };
+  })
 }

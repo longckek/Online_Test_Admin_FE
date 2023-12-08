@@ -1,31 +1,50 @@
 import PropTypes from 'prop-types';
-import { useState, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { _jobs, JOB_PUBLISH_OPTIONS } from 'src/_mock';
+import { useGetActivationCode } from 'src/api/activation-code'
 
+import Iconify from 'src/components/iconify';
+import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
 
+import { ActivationCodeDetailsSkeleton } from '../activation-code-skeleton'
 import ActivationCodeDetailsToolbar from '../activation-code-details-toolbar';
 import ActivationCodeDetailsContent from '../activation-code-details-content';
 
 // ----------------------------------------------------------------------
 
 export default function ActivationCodeDetailsView({ id }) {
+  const { activationCode, activationCodeLoading, activationCodeError } = useGetActivationCode(id)
+
   const settings = useSettingsContext();
 
-  const currentJob = _jobs.filter((job) => job.id === id)[0];
+  const renderSkeleton = <ActivationCodeDetailsSkeleton />;
 
-  const [publish, setPublish] = useState(currentJob?.publish);
-
-  const handleChangePublish = useCallback((newValue) => {
-    setPublish(newValue);
-  }, []);
+  const renderError = (
+    <EmptyContent
+      filled
+      title={`${activationCodeError?.message}`}
+      action={
+        <Button
+          component={RouterLink}
+          href={paths.dashboard.activationCode.root}
+          startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
+          sx={{ mt: 3 }}
+        >
+          Back to List
+        </Button>
+      }
+      sx={{ py: 10 }}
+    />
+  );
 
   const renderTabs = (
     <Tabs
@@ -43,18 +62,25 @@ export default function ActivationCodeDetailsView({ id }) {
     </Tabs>
   );
 
-  return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+  const renderActivationCode = activationCode && (
+    <>
       <ActivationCodeDetailsToolbar
         backLink={paths.dashboard.activationCode.root}
         liveLink="#"
-        publish={publish || ''}
-        onChangePublish={handleChangePublish}
-        publishOptions={JOB_PUBLISH_OPTIONS}
       />
       {renderTabs}
 
-      <ActivationCodeDetailsContent job={currentJob} />
+      <ActivationCodeDetailsContent activationCode={activationCode} />
+    </>
+  )
+
+  return (
+    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      {activationCodeLoading && renderSkeleton}
+
+      {activationCodeError && renderError}
+
+      {activationCode && renderActivationCode}
     </Container>
   );
 }

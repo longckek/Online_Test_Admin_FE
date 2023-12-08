@@ -14,14 +14,14 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function ActivationCodeDetailsContent({ job }) {
-  const { skills, createdAt, employmentTypes } = job;
+export default function ActivationCodeDetailsContent({ activationCode }) {
+  const { activationDate, course, creator, student, codeActive } = activationCode;
 
   const renderContent = (
     <Stack component={Card} spacing={3} sx={{ p: 3 }}>
-      <Typography variant="h4">Code: 1N9NHG</Typography>
+      <Typography variant="h4">Code: {codeActive}</Typography>
 
-      <Typography variant="h6">Ngày kích hoạt: 2023</Typography>
+      { activationDate && (<Typography variant="h6">Ngày kích hoạt: {fDate(activationDate)}</Typography>)}
 
       <Stack
         component={Paper}
@@ -30,19 +30,25 @@ export default function ActivationCodeDetailsContent({ job }) {
         direction="row"
         sx={{ p: 3, borderRadius: 2, mt: 3 }}
       >
-        <Avatar
-          alt={job.company.name}
-          src={job.company.logo}
-          variant="rounded"
-          sx={{ width: 64, height: 64 }}
-        />
+        { student ? (
+          <>
+            <Avatar
+              alt={student.user.name}
+              src={student.user.avatar}
+              variant="rounded"
+              sx={{ width: 64, height: 64 }}
+            />
 
-        <Stack spacing={1}>
-          <Typography variant="subtitle1">{job.company.name} - 20231234</Typography>
-          <Typography variant="body2">{job.company.fullAddress}</Typography>
-          <Typography variant="body2">{job.company.phoneNumber}</Typography>
-          <Typography variant="body2">{job.company.phoneNumber}</Typography>
-        </Stack>
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">
+                {student.user.name} - {student.studentCode}
+              </Typography>
+              <Typography variant="body2">{student.user.email}</Typography>
+              <Typography variant="body2">{student.phoneNumber}</Typography>
+              <Typography variant="body2">{student.school}</Typography>
+            </Stack>
+          </>
+        ): "chua co hoc sinh dang ki"}
       </Stack>
     </Stack>
   );
@@ -53,17 +59,17 @@ export default function ActivationCodeDetailsContent({ job }) {
       {[
         {
           label: 'Tên',
-          value: 'TSA Danh gia tu duy',
+          value: course.name,
           icon: <Iconify icon="solar:clock-circle-bold" />,
         },
         {
           label: 'Giá',
-          value: employmentTypes,
+          value: course.price,
           icon: <Iconify icon="solar:clock-circle-bold" />,
         },
         {
           label: 'Ngày khởi tạo',
-          value: fDate(createdAt),
+          value: fDate(course.createdAt),
           icon: <Iconify icon="solar:calendar-date-bold" />,
         },
       ].map((item) => (
@@ -88,18 +94,18 @@ export default function ActivationCodeDetailsContent({ job }) {
     </Stack>
   );
 
-  const renderCreator = (
+  const renderCreator = creator && (
     <Stack component={Card} spacing={2} sx={{ p: 3, borderRadius: 2, mt: 3 }}>
       <Typography variant="h6">Người tạo</Typography>
       {[
         {
           label: 'Tên',
-          value: 'TSA Danh gia tu duy',
+          value: creator.name,
           icon: <Iconify icon="solar:clock-circle-bold" />,
         },
         {
           label: 'Email',
-          value: employmentTypes,
+          value: creator.email,
           icon: <Iconify icon="solar:clock-circle-bold" />,
         },
       ].map((item) => (
@@ -140,5 +146,5 @@ export default function ActivationCodeDetailsContent({ job }) {
 }
 
 ActivationCodeDetailsContent.propTypes = {
-  job: PropTypes.object,
+  activationCode: PropTypes.object,
 };

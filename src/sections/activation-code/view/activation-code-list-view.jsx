@@ -14,8 +14,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { _userList, _orders } from 'src/_mock';
-import { useGetListActivationCode } from 'src/api/activation-code';
+import { useGetListActivationCode, deleteActivationCode } from 'src/api/activation-code';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -103,7 +102,8 @@ export default function ActivationCodeListView() {
   );
 
   const handleDeleteRow = useCallback(
-    (id) => {
+    async (id) => {
+      await deleteActivationCode(id);
       const deleteRow = tableData.filter((row) => row.id !== id);
       setTableData(deleteRow);
 

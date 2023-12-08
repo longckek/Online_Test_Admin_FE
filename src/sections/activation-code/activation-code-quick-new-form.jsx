@@ -68,12 +68,11 @@ export default function ActivationCodeQuickNewForm({ open, onClose }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
       await generateActivationCode(data)
+      await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       onClose();
-      enqueueSnackbar('Update success!');
-      console.info('DATA', data);
+      enqueueSnackbar('Cap nhat thanh cong!');
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
       console.error(error);

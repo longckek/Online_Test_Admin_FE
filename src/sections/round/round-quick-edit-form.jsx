@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
@@ -11,63 +11,77 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import { updateRound } from 'src/api/round'
 
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFCheckbox } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export default function RoundQuickEditForm({ currentUser, open, onClose }) {
+export default function RoundQuickEditForm({ currentRound, open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewUserSchema = Yup.object().shape({
+  const NewRoundSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('Country is required'),
-    company: Yup.string().required('Company is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role is required'),
+    maxMark: Yup.number().required('Mark is required'),
+    timeAllow: Yup.number().required('Time Allow is required'),
+    timeStart: Yup.mixed().nullable().required('Time start is required'),
+    timeEnd: Yup.mixed()
+      .required('Time end is required')
+      .test(
+        'date-min',
+        'Time end must be later than Time start',
+        (value, { parent }) => value.getTime() > parent.timeStart.getTime()
+      ),
+    showCorrectAnswer: Yup.boolean(),
+    showLabelAnswer: Yup.boolean(),
+    showMark: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      phoneNumber: currentUser?.phoneNumber || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      state: currentUser?.state || '',
-      city: currentUser?.city || '',
-      zipCode: currentUser?.zipCode || '',
-      status: currentUser?.status,
-      company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      name: currentRound?.name || '',
+      maxMark: currentRound?.maxMark || '',
+      timeAllow: currentRound?.timeAllow || '',
+      timeStart: currentRound?.timeStart ? new Date(currentRound?.timeStart) : new Date(),
+      timeEnd: currentRound?.timeEnd ? new Date(currentRound?.timeEnd) : null,
+      showCorrectAnswer: currentRound?.showCorrectAnswer || true,
+      showLabelAnswer: currentRound?.showLabelAnswer || false,
+      showMark: currentRound?.showMark || true,
+      codeTestFormGroup: currentRound?.codeTestFormGroup,
     }),
-    [currentUser]
+    [currentRound]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
+    resolver: yupResolver(NewRoundSchema),
     defaultValues,
   });
 
   const {
     reset,
+    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (currentRound) {
+      reset(defaultValues);
+    }
+  }, [currentRound, defaultValues, reset]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
+      await updateRound(currentRound?.id, data);
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       onClose();
-      enqueueSnackbar('Update success!');
-      console.info('DATA', data);
+      enqueueSnackbar('Cap nhat thanh cong!');
     } catch (error) {
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.error(error);
     }
   });
@@ -87,96 +101,88 @@ export default function RoundQuickEditForm({ currentUser, open, onClose }) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Update Course</DialogTitle>
+        <DialogTitle>Sua vong thi</DialogTitle>
 
         <DialogContent>
           <Box
             rowGap={3}
             columnGap={2}
             display="grid"
-            // gridTemplateColumns={{
-            //   xs: 'repeat(1, 1fr)',
-            //   sm: 'repeat(2, 1fr)',
-            // }}
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+            }}
           >
-            {/* <RHFSelect name="status" label="Status">
-              {USER_STATUS_OPTIONS.map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect> */}
-
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <RHFTextField name="name" label="Course Name" />
-            <RHFTextField name="email" label="Email Address" />
-            <RHFTextField name="price" label="Price" />
-            <RHFTextField name="description" label="Description" />
-            {/* <RHFAutocomplete
-              name="tags"
-              label="Tags"
-              placeholder="+ Tags"
-              multiple
-              freeSolo
-              options={_tags.map((option) => option)}
-              getOptionLabel={(option) => option}
-              renderOption={(props, option) => (
-                <li {...props} key={option}>
-                  {option}
-                </li>
+            <RHFTextField name="name" label="Ten vong thi" />
+            <RHFTextField name="maxMark" label="Diem" />
+
+            <Controller
+              name="timeStart"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <DatePicker
+                  label="Thoi gian bat dau"
+                  value={field.value}
+                  onChange={(newValue) => {
+                    field.onChange(newValue);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      error: !!error,
+                      helperText: error?.message,
+                    },
+                  }}
+                />
               )}
-              renderTags={(selected, getTagProps) =>
-                selected.map((option, index) => (
-                  <Chip
-                    {...getTagProps({ index })}
-                    key={option}
-                    label={option}
-                    size="small"
-                    color="info"
-                    variant="soft"
-                  />
-                ))
-              }
-            /> */}
+            />
+            <Controller
+              name="timeEnd"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <DatePicker
+                  label="Thoi gian ket thuc"
+                  value={field.value}
+                  onChange={(newValue) => {
+                    field.onChange(newValue);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      error: !!error,
+                      helperText: error?.message,
+                    },
+                  }}
+                />
+              )}
+            />
+            <RHFTextField name="timeAllow" label="Thoi gian lam bai" />
+            <RHFTextField name="codeTestFormGroup" label="Code" disabled />
 
-            {/* <RHFAutocomplete
-              name="country"
-              label="Country"
-              options={countries.map((country) => country.label)}
-              getOptionLabel={(option) => option}
-              renderOption={(props, option) => {
-                const { code, label, phone } = countries.filter(
-                  (country) => country.label === option
-                )[0];
+            <RHFCheckbox name="showCorrectAnswer" label="Hien thi dap an" />
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-                if (!label) {
-                  return null;
-                }
+            <RHFCheckbox name="showLabelAnswer" label="Hien thi nhan" />
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-                return (
-                  <li {...props} key={label}>
-                    <Iconify
-                      key={label}
-                      icon={`circle-flags:${code.toLowerCase()}`}
-                      width={28}
-                      sx={{ mr: 1 }}
-                    />
-                    {label} ({code}) +{phone}
-                  </li>
-                );
-              }}
-            /> */}
+            <RHFCheckbox name="showMark" label="Hien thi diem" />
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
           </Box>
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
-            Cancel
+          <Button variant="outlined" onClick={() => {
+            reset();
+            onClose();
+          }}>
+            Huy
           </Button>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Update
+            Cap nhat
           </LoadingButton>
         </DialogActions>
       </FormProvider>
@@ -185,7 +191,7 @@ export default function RoundQuickEditForm({ currentUser, open, onClose }) {
 }
 
 RoundQuickEditForm.propTypes = {
-  currentUser: PropTypes.object,
+  currentRound: PropTypes.object,
   onClose: PropTypes.func,
   open: PropTypes.bool,
 };

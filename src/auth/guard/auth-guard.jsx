@@ -44,7 +44,6 @@ function Container({ children }) {
       const loginPath = loginPaths[method];
 
       const href = `${loginPath}?${searchParams}`;
-      console.log('winter-href', href);
       router.replace(href);
     } else {
       setChecked(true);

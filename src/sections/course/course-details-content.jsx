@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
@@ -17,14 +20,15 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function CourseDetailsContent({ course }) {
-  console.log('winter-course: ', course);
   const { createdAt, description, mockContest, name, price } = course;
+
+  const router = useRouter();
 
   const renderContent = (
     <Stack component={Card} spacing={3} sx={{ p: 3 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h4">{name}</Typography>
-        <IconButton>
+        <IconButton onClick={() => router.push(paths.dashboard.course.edit(`${course.id}`))}>
           <Iconify icon="solar:pen-bold" />
         </IconButton>
       </Box>

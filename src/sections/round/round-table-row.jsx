@@ -20,13 +20,12 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import UserQuickEditForm from './round-quick-edit-form';
+import RoundQuickEditForm from './round-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
 export default function RoundTableRow({ row, onViewRow }) {
   const { codeTestFormGroup, maxMark, name, showCorrectAnswer, showLabelAnswer, showMark, timeStart, timeEnd, timeAllow} = row;
-  console.log('winter-round-row: ', row);
   const showOptions = [
     { label: 'Hiện thị đáp án', value: showCorrectAnswer },
     { label: 'Hiện thị nhãn', value: showLabelAnswer },
@@ -140,7 +139,7 @@ export default function RoundTableRow({ row, onViewRow }) {
 
       {renderSecondary}
 
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
+      <RoundQuickEditForm currentRound={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
 
       <CustomPopover
         open={popover.open}
@@ -150,23 +149,12 @@ export default function RoundTableRow({ row, onViewRow }) {
       >
         <MenuItem
           onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          View
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            // onEditRow();
             quickEdit.onTrue();
             popover.onClose();
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          Sua
         </MenuItem>
       </CustomPopover>
     </>

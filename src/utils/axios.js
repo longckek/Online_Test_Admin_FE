@@ -49,11 +49,13 @@ export const endpoints = {
   round: {
     list: '/admin/round/list',
     details: '/admin/round/details',
+    root: '/admin/round',
   },
   activationCode: {
     list: '/admin/activation-code/list',
     details: '/admin/activation-code/details',
     create: '/admin/activation-code/generate',
+    root: '/admin/activation-code',
   },
   mail: {
     list: '/api/mail/list',

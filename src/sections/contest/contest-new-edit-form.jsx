@@ -32,8 +32,8 @@ export default function ContestNewEditForm({ currentContest }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewContestSchema = Yup.object().shape({
-    name: Yup.string().required('Ten is required'),
-    maxNumAttempt: Yup.number('hello').required('Luot thi toi da is required'),
+    name: Yup.string().required('Tên bắt buộc'),
+    maxNumAttempt: Yup.number().required('Lượt thi tối đa bắt buộc'),
     // not required
     slug: Yup.string(),
   });

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { useMemo } from 'react';
 
 import axios, { fetcher, endpoints } from 'src/utils/axios';
@@ -40,3 +40,36 @@ export function useGetRound(roundId) {
 
   return memoizedValue;
 }
+
+export async function updateRound(roundId, eventData) {
+  const URLupdate = roundId ? `${endpoints.round.root}/${roundId}` : '';
+  const URLlist = [endpoints.round.list, { params: { limit: 10000 } }];
+
+
+  const dataRound = {
+    name: eventData.name,
+    maxMark: eventData.maxMark,
+    timeAllow: eventData.timeAllow,
+    showCorrectAnswer: eventData.showCorrectAnswer,
+    showLabelAnswer: eventData.showLabelAnswer,
+    showMark: eventData.showMark,
+    timeStart: new Date(eventData.timeStart),
+    timeEnd: new Date(eventData.timeEnd)
+  }
+  await axios.patch(URLupdate, dataRound);
+
+  mutate(URLlist, (currentData) => {
+    if(!currentData) return currentData
+    const newResult = currentData.result.map((round) =>
+      round.id === roundId ? { ...round, ...dataRound } : round
+    );
+    console.log('winter-newResult', newResult);
+    const newMetadata = { ...currentData.metadata, total: newResult.length }
+    return {
+      ...currentData,
+      result: newResult,
+      metadata: newMetadata
+    }
+  })
+}
+
