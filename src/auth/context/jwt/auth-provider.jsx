@@ -3,6 +3,8 @@ import { useMemo, useEffect, useReducer, useCallback } from 'react';
 
 import axios, { endpoints } from 'src/utils/axios';
 
+import { useRouter } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
 import { AuthContext } from './auth-context';
 import { setSession, isValidToken } from './utils';
 
@@ -45,6 +47,7 @@ const reducer = (state, action) => {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
 
   const initialize = useCallback(async () => {
     try {
@@ -61,9 +64,10 @@ export function AuthProvider({ children }) {
         const response = await axios.get(endpoints.auth.me);
 
         const user = response.data.result;
-        if (!user && user.role.id !== 1) {
+        if (user.role.id !== 1) {
           await axios.post(endpoints.auth.signOut);
           setSession(null);
+          router.replace(paths.auth.google.signIn);
         }
         dispatch({
           type: 'INITIAL',
@@ -90,7 +94,7 @@ export function AuthProvider({ children }) {
         },
       });
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     initialize();
