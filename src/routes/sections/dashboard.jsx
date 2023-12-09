@@ -25,6 +25,14 @@ const ContestCreatePage = lazy(() => import('src/pages/dashboard/contest/new'));
 const ContestEditPage = lazy(() => import('src/pages/dashboard/contest/edit'));
 // ROUND
 const RoundListPage = lazy(() => import('src/pages/dashboard/round/list'));
+// ACADEMIC TRANSCRIPT
+const AcademicTranscriptListPage = lazy(() => import('src/pages/dashboard/academic-transcript/list'));
+const AcademicTranscriptDetailsPage = lazy(() => import('src/pages/dashboard/academic-transcript/details'));
+// SYNC DATA
+const SyncDataTestOutlinePage = lazy(() => import('src/pages/dashboard/sync-data/test-outline'));
+const SyncDataRoundPage = lazy(() => import('src/pages/dashboard/sync-data/round'));
+const SyncDataTestFormGroupPage = lazy(() => import('src/pages/dashboard/sync-data/test-form-group'));
+
 
 // ----------------------------------------------------------------------
 
@@ -77,6 +85,23 @@ export const dashboardRoutes = [
         children: [
           { element: <RoundListPage />, index: true },
           { path: 'list', element: <RoundListPage /> },
+        ],
+      },
+      {
+        path: 'academic-transcript',
+        children: [
+          { element: <AcademicTranscriptListPage />, index: true },
+          { path: 'list', element: <AcademicTranscriptListPage /> },
+          { path: ':id', element: <AcademicTranscriptDetailsPage /> },
+        ],
+      },
+      {
+        path: 'sync-data',
+        children: [
+          { element: <SyncDataTestOutlinePage />, index: true },
+          { path: 'test-outline', element: <SyncDataTestOutlinePage /> },
+          { path: 'round', element: <SyncDataRoundPage /> },
+          { path: 'test-form-group', element: <SyncDataTestFormGroupPage /> },
         ],
       },
     ],

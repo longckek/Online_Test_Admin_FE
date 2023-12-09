@@ -71,7 +71,7 @@ export default function ContestNewEditForm({ currentContest }) {
   const name = watch('name');
 
   useEffect(() => {
-    const slug = slugify(name, { lower: true, replacement: '_' });
+    const slug = slugify(name, { lower: true, replacement: '_', locale: 'vi' });
     setValue('slug', slug);
   }, [name, setValue]);
 
@@ -106,7 +106,7 @@ export default function ContestNewEditForm({ currentContest }) {
             >
               <RHFTextField name="name" label="Cuộc thi" />
               <RHFTextField name="slug" label="Slug" disabled />
-              <RHFTextField name="maxNumAttempt" label="Luot thi toi da" />
+              <RHFTextField name="maxNumAttempt" label="Lượt thi tối đa" />
             </Box>
             <ContestNewEditRound />
 

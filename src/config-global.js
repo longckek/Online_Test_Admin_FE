@@ -4,6 +4,7 @@ import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 export const HOST_API = import.meta.env.VITE_HOST_API;
+export const HOST_CLIENT = import.meta.env.VITE_HOST_CLIENT;
 export const ASSETS_API = import.meta.env.VITE_ASSETS_API;
 
 export const FIREBASE_API = {
@@ -27,6 +28,8 @@ export const AUTH0_API = {
   domain: import.meta.env.VITE_AUTH0_DOMAIN,
   callbackUrl: import.meta.env.VITE_AUTH0_CALLBACK_URL,
 };
+
+export const GOOGLE_LOGIN = `${HOST_API}/auth/google/sign-in?to=${HOST_CLIENT}${paths.auth.google.callback}`;
 
 export const MAPBOX_API = import.meta.env.VITE_MAPBOX_API;
 

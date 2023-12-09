@@ -30,7 +30,7 @@ export default function CourseDetailsToolbar({
         href={backLink}
         startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
       >
-        Back
+        Trở lại
       </Button>
     </Stack>
   );

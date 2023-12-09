@@ -71,7 +71,7 @@ export default function ContestNewEditRound() {
               <RHFTextField
                 size="small"
                 name={`rounds[${index}].aliasRound.name`}
-                label="Ten thay the"
+                label="Tên thay thế"
                 InputLabelProps={{ shrink: true }}
               />
 

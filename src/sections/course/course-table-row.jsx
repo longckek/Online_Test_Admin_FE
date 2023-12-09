@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { vi } from 'date-fns/locale';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -39,7 +40,7 @@ export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow 
 
       <TableCell>
         <ListItemText
-          primary={format(new Date(createdAt), 'dd MMM yyyy')}
+          primary={format(new Date(createdAt), 'dd MMM yyyy', { locale: vi })}
           secondary={format(new Date(createdAt), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{

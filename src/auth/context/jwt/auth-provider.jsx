@@ -55,12 +55,16 @@ export function AuthProvider({ children }) {
         const token = {
           accessToken,
           refreshToken,
-        }
+        };
         setSession(token);
 
         const response = await axios.get(endpoints.auth.me);
 
-        const { user } = response.data.result;
+        const user = response.data.result;
+        if (!user && user.role.id !== 1) {
+          await axios.post(endpoints.auth.signOut);
+          setSession(null);
+        }
         dispatch({
           type: 'INITIAL',
           payload: {
@@ -117,7 +121,7 @@ export function AuthProvider({ children }) {
 
   // LOGOUT
   const logout = useCallback(async () => {
-    // await axios.post(endpoints.auth.signOut);
+    await axios.post(endpoints.auth.signOut);
     setSession(null);
     dispatch({
       type: 'LOGOUT',

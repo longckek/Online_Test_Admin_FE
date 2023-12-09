@@ -12,9 +12,9 @@ export const paths = {
   components: '/components',
   // AUTH
   auth: {
-    jwt: {
-      login: `${ROOTS.AUTH}/jwt/login`,
-      register: `${ROOTS.AUTH}/jwt/register`,
+    google: {
+      signIn: `${ROOTS.AUTH}/google/login`,
+      callback: `${ROOTS.AUTH}/google/callback`
     },
   },
   // DASHBOARD
@@ -46,17 +46,10 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/academic-transcript`,
       details: (id) => `${ROOTS.DASHBOARD}/academic-transcript/${id}`,
     },
-    // syncData: {
-    //   root: `${ROOTS.DASHBOARD}/sync-data`,
-    //   new: `${ROOTS.DASHBOARD}/sync-data/new`,
-    //   list: `${ROOTS.DASHBOARD}/sync-data/list`,
-    //   cards: `${ROOTS.DASHBOARD}/sync-data/cards`,
-    //   profile: `${ROOTS.DASHBOARD}/sync-data/profile`,
-    //   account: `${ROOTS.DASHBOARD}/sync-data/account`,
-    //   edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
-    //   demo: {
-    //     edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
-    //   },
-    // },
+    syncData: {
+      testOutline: `${ROOTS.DASHBOARD}/sync-data/test-outline`,
+      round: `${ROOTS.DASHBOARD}/sync-data/round`,
+      testFormGroup: `${ROOTS.DASHBOARD}/sync-data/test-form-group`,
+    },
   },
 };

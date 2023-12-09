@@ -106,7 +106,7 @@ export default function ActivationCodeQuickNewForm({ open, onClose }) {
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
             <RHFSelect
               name="name"
-              label="Course"
+              label="Khóa học"
               InputLabelProps={{ shrink: true }}
             >
               {courseOptions.map((course) => (

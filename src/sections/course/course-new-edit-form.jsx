@@ -72,7 +72,7 @@ export default function CourseNewEditForm({ currentCourse }) {
   const name = watch('name');
 
   useEffect(() => {
-    const slug = slugify(name, { lower: true, replacement: '_' });
+    const slug = slugify(name, { lower: true, replacement: '_', locale: 'vi' });
     setValue('slug', slug);
   }, [name, setValue]);
 

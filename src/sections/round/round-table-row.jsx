@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { vi } from 'date-fns/locale';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
@@ -41,7 +42,7 @@ export default function RoundTableRow({ row, onViewRow }) {
 
       <TableCell>
         <ListItemText
-          primary={format(new Date(timeStart), 'dd MMM yyyy')}
+          primary={format(new Date(timeStart), 'dd MMM yyyy', { locale: vi })}
           secondary={format(new Date(timeStart), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
@@ -54,7 +55,7 @@ export default function RoundTableRow({ row, onViewRow }) {
 
       <TableCell>
         <ListItemText
-          primary={format(new Date(timeEnd), 'dd MMM yyyy')}
+          primary={format(new Date(timeEnd), 'dd MMM yyyy', { locale: vi })}
           secondary={format(new Date(timeEnd), 'p')}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
@@ -148,7 +149,7 @@ export default function RoundTableRow({ row, onViewRow }) {
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Sua
+          Sửa
         </MenuItem>
       </CustomPopover>
     </>

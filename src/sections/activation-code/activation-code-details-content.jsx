@@ -48,7 +48,7 @@ export default function ActivationCodeDetailsContent({ activationCode }) {
               <Typography variant="body2">{student.school}</Typography>
             </Stack>
           </>
-        ): "chua co hoc sinh dang ki"}
+        ): "Chưa có học sinh đăng kí"}
       </Stack>
     </Stack>
   );

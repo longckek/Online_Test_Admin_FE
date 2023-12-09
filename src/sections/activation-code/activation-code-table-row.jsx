@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { vi } from 'date-fns/locale';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -43,7 +44,7 @@ export default function ActivationCodeTableRow({ row, onViewRow, onDeleteRow }) 
 
       <TableCell>
         <ListItemText
-          primary={activationDate ? format(new Date(activationDate), 'dd MMM yyyy') : 'trống'}
+          primary={activationDate ? format(new Date(activationDate), 'dd MMM yyyy', { locale: vi }) : 'trống'}
           secondary={activationDate && format(new Date(activationDate), 'p')}
           primaryTypographyProps={activationDate ? { typography: 'body2', noWrap: true } : { typography: 'body2', color: 'text.disabled' }}
           secondaryTypographyProps={{

@@ -26,9 +26,6 @@ export const fetcher = async (args) => {
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  chat: '/api/chat',
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
   auth: {
     me: '/admin/get-me',
     signIn: '/auth/sign-in',
@@ -57,20 +54,16 @@ export const endpoints = {
     create: '/admin/activation-code/generate',
     root: '/admin/activation-code',
   },
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
+  student: {
+    list: '/admin/student/list',
+    details: '/admin/student/details',
   },
-  post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
+  history: {
+    student: '/admin/history/list/student',
   },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
+  syncData: {
+    testOutline: '/nguon-1/load/test-outline',
+    testTakerGroup: '/nguon-1/load/test-taker-group',
+    testFormGroup: '/nguon-1/load/test-form-group',
   },
 };

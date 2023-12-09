@@ -35,7 +35,7 @@ export default function ActivationCodeDetailsToolbar({
         href={backLink}
         startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
       >
-        Back
+        Trở lại
       </Button>
     </Stack>
   );

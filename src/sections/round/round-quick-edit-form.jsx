@@ -101,7 +101,7 @@ export default function RoundQuickEditForm({ currentRound, open, onClose }) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Sua vong thi</DialogTitle>
+        <DialogTitle>Sửa vòng thi</DialogTitle>
 
         <DialogContent>
           <Box
@@ -116,7 +116,7 @@ export default function RoundQuickEditForm({ currentRound, open, onClose }) {
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <RHFTextField name="name" label="Ten vong thi" />
+            <RHFTextField name="name" label="Tên vòng thi" />
             <RHFTextField name="maxMark" label="Diem" />
 
             <Controller
@@ -124,7 +124,7 @@ export default function RoundQuickEditForm({ currentRound, open, onClose }) {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <DatePicker
-                  label="Thoi gian bat dau"
+                  label="Thời gian bắt đầu"
                   value={field.value}
                   onChange={(newValue) => {
                     field.onChange(newValue);
@@ -144,7 +144,7 @@ export default function RoundQuickEditForm({ currentRound, open, onClose }) {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <DatePicker
-                  label="Thoi gian ket thuc"
+                  label="Thời gian kết thúc"
                   value={field.value}
                   onChange={(newValue) => {
                     field.onChange(newValue);
@@ -159,16 +159,16 @@ export default function RoundQuickEditForm({ currentRound, open, onClose }) {
                 />
               )}
             />
-            <RHFTextField name="timeAllow" label="Thoi gian lam bai" />
+            <RHFTextField name="timeAllow" label="Thời gian làm bài" />
             <RHFTextField name="codeTestFormGroup" label="Code" disabled />
 
-            <RHFCheckbox name="showCorrectAnswer" label="Hien thi dap an" />
+            <RHFCheckbox name="showCorrectAnswer" label="Hiển thị đáp án" />
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <RHFCheckbox name="showLabelAnswer" label="Hien thi nhan" />
+            <RHFCheckbox name="showLabelAnswer" label="Hiển thị nhãn" />
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <RHFCheckbox name="showMark" label="Hien thi diem" />
+            <RHFCheckbox name="showMark" label="Hiển thị điểm" />
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
           </Box>
         </DialogContent>
@@ -178,11 +178,11 @@ export default function RoundQuickEditForm({ currentRound, open, onClose }) {
             reset();
             onClose();
           }}>
-            Huy
+            Hủy
           </Button>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Cap nhat
+            Cập nhật
           </LoadingButton>
         </DialogActions>
       </FormProvider>

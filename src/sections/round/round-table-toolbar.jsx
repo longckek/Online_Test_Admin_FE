@@ -45,7 +45,7 @@ export default function RoundTableToolbar({
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search..."
+            placeholder="Tìm kiếm ..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

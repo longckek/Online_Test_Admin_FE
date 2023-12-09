@@ -37,7 +37,7 @@ export default function CourseDetailsView({ id }) {
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
           sx={{ mt: 3 }}
         >
-          Back to List
+          Trở lại
         </Button>
       }
       sx={{ py: 10 }}

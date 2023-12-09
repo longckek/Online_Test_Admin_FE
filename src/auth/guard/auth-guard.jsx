@@ -10,12 +10,6 @@ import { useAuthContext } from '../hooks';
 
 // ----------------------------------------------------------------------
 
-const loginPaths = {
-  jwt: paths.auth.jwt.login,
-};
-
-// ----------------------------------------------------------------------
-
 export default function AuthGuard({ children }) {
   const { loading } = useAuthContext();
 
@@ -31,24 +25,17 @@ AuthGuard.propTypes = {
 function Container({ children }) {
   const router = useRouter();
 
-  const { authenticated, method } = useAuthContext();
+  const { authenticated } = useAuthContext();
 
   const [checked, setChecked] = useState(false);
 
   const check = useCallback(() => {
     if (!authenticated) {
-      const searchParams = new URLSearchParams({
-        returnTo: window.location.pathname,
-      }).toString();
-
-      const loginPath = loginPaths[method];
-
-      const href = `${loginPath}?${searchParams}`;
-      router.replace(href);
+      router.replace(paths.auth.google.signIn);
     } else {
       setChecked(true);
     }
-  }, [authenticated, method, router]);
+  }, [authenticated, router]);
 
   useEffect(() => {
     check();

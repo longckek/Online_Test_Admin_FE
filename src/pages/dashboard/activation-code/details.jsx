@@ -6,7 +6,7 @@ import { ActivationCodeDetailsView } from 'src/sections/activation-code/view';
 
 // ----------------------------------------------------------------------
 
-export default function CourseDetailsPage() {
+export default function ActivationCodeDetailsPage() {
   const params = useParams();
 
   const { id } = params;

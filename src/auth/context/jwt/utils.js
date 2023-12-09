@@ -52,7 +52,7 @@ export const tokenExpired = (exp) => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
 
-    window.location.href = paths.auth.jwt.login;
+    window.location.href = paths.auth.google.signIn;
   }, timeLeft);
 };
 

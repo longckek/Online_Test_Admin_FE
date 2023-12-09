@@ -18,10 +18,7 @@ import { bgBlur } from 'src/theme/css';
 import Logo from 'src/components/logo';
 import Label from 'src/components/label';
 
-import NavMobile from './nav/mobile';
-import NavDesktop from './nav/desktop';
 import { HEADER } from '../config-layout';
-import { navConfig } from './config-navigation';
 import LoginButton from '../common/login-button';
 import HeaderShadow from '../common/header-shadow';
 import SettingsButton from '../common/settings-button';
@@ -85,8 +82,6 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {mdUp && <NavDesktop data={navConfig} />}
-
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
             <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
               Purchase Now
@@ -100,8 +95,6 @@ export default function Header() {
                 mr: { md: 2 },
               }}
             />
-
-            {!mdUp && <NavMobile data={navConfig} />}
           </Stack>
         </Container>
       </Toolbar>
