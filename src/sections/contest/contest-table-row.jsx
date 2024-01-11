@@ -22,7 +22,8 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 export default function ContestTableRow({ row, onDeleteRow, onEditRow}) {
-  const { createdAt, maxNumAttempt, name, totalMark, round } = row;
+  const { createdAt, maxNumAttempt, name, totalMark, round: roundContest } = row;
+  const round = roundContest && roundContest.length > 0 ? roundContest : [];
 
   const confirm = useBoolean();
 

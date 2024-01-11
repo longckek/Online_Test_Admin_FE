@@ -29,7 +29,7 @@ export const AUTH0_API = {
   callbackUrl: import.meta.env.VITE_AUTH0_CALLBACK_URL,
 };
 
-export const GOOGLE_LOGIN = `${HOST_API}/auth/google/sign-in?to=${HOST_CLIENT}${paths.auth.google.callback}`;
+export const GOOGLE_LOGIN = `${HOST_API}/auth/google/sign-in`;
 
 export const MAPBOX_API = import.meta.env.VITE_MAPBOX_API;
 

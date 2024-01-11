@@ -23,6 +23,25 @@ export function useGetCourses() {
   return memoizedValue;
 }
 
+export function useGet10Courses() {
+  const URL = [endpoints.course.list, { params: { limit: 10 } }];
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      courses: data?.result || [],
+      coursesLoading: isLoading,
+      coursesError: error,
+      coursesValidating: isValidating,
+      coursesEmpty: !isLoading && !data?.result.length,
+    }),
+    [data?.result, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
 export function useGetCourse(courseId) {
   const URL = courseId ? `${endpoints.course.details}/${courseId}` : '';
 

@@ -21,6 +21,7 @@ import Iconify from 'src/components/iconify';
 
 export default function CourseDetailsContent({ course }) {
   const { createdAt, description, mockContest, name, price } = course;
+  console.log('winter-mockContest', mockContest);
 
   const router = useRouter();
 
@@ -58,12 +59,7 @@ export default function CourseDetailsContent({ course }) {
           label: 'Ngày khởi tạo',
           value: fDate(createdAt),
           icon: <Iconify icon="solar:calendar-date-bold" />,
-        },
-        {
-          label: 'Người tạo',
-          value: 'Vatlysieunham@gmail.com',
-          icon: <Iconify icon="solar:user-circle-bold" />,
-        },
+        }
       ].map((item) => (
         <Stack key={item.label} spacing={1.5} direction="row">
           {item.icon}

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
@@ -43,67 +43,26 @@ export function useGetContest(contestId) {
 
 export async function createContest(eventData) {
   const URLcreate = endpoints.contest.root;
-  const URLmodify = endpoints.contest.modify;
 
   const dataContest = {
     name: eventData.name,
     slug: eventData.slug,
     maxNumAttempt: eventData.maxNumAttempt
   }
-  if (eventData.rounds) {
-    const hasInvalidId = _.some(
-      eventData.rounds,
-      (item) => _.isUndefined(item.id) || item.id === 0 || _.isUndefined(item.aliasRound.name) || _.trim(item.aliasRound.name) === ''
-    );
-    if (hasInvalidId) {
-      await Promise.reject(new Error('Không được để trống vòng thi'))
-    }
-    const listRound = {};
-    _.forEach(eventData.rounds, (round) => {
-      _.set(listRound, round.id, round.aliasRound.name);
-    })
-    const { data } = await axios.post(URLcreate, dataContest);
-    const contestId = data.result.id;
-    const dataModify = {
-      mockContestId: contestId,
-      listRound
-    }
-    await axios.post(URLmodify, dataModify)
-  } else {
-    await axios.post(URLcreate, dataContest)
-  }
+
+  await axios.post(URLcreate, dataContest)
 }
 
 export async function updateContest(contestId, eventData) {
   const URLupdate = contestId ? `${endpoints.contest.root}/${contestId}` : '';
-  const URLmodify = endpoints.contest.modify;
 
   const dataContest = {
     name: eventData.name,
     slug: eventData.slug,
     maxNumAttempt: eventData.maxNumAttempt
   }
-  if (eventData.rounds) {
-    const hasInvalidId = _.some(
-      eventData.rounds,
-      (item) => _.isUndefined(item.id) || item.id === 0 || _.isUndefined(item.aliasRound.name) || _.trim(item.aliasRound.name) === ''
-    );
-    if (hasInvalidId) {
-      await Promise.reject(new Error('Không được để trống vòng thi'))
-    }
-    const listRound = {};
-    _.forEach(eventData.rounds, (round) => {
-      _.set(listRound, round.id, round.aliasRound.name);
-    })
-    await axios.patch(URLupdate, dataContest);
-    const dataModify = {
-      mockContestId: contestId,
-      listRound
-    }
-    await axios.post(URLmodify, dataModify)
-  } else {
-    await axios.patch(URLupdate, dataContest)
-  }
+
+  await axios.patch(URLupdate, dataContest)
 }
 
 export async function deleteContest(contestId) {

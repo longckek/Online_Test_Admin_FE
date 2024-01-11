@@ -61,22 +61,22 @@ export function AuthProvider({ children }) {
         };
         setSession(token);
 
-        // const response = await axios.get(endpoints.auth.me);
+        const response = await axios.get(endpoints.auth.me);
 
-        // // const user = response.data.result;
-        // if (user.role.id !== 1) {
-        //   await axios.post(endpoints.auth.signOut);
-        //   setSession(null);
-        //   router.replace(paths.auth.google.signIn);
-        // }
-        // dispatch({
-        //   type: 'INITIAL',
-        //   payload: {
-        //     user: {
-        //       ...user,
-        //     },
-        //   },
-        // });
+        const user = response.data.result;
+        if (user.role.id !== 1) {
+          await axios.post(endpoints.auth.signOut);
+          setSession(null);
+          router.replace(paths.auth.google.signIn);
+        }
+        dispatch({
+          type: 'INITIAL',
+          payload: {
+            user: {
+              ...user,
+            },
+          },
+        });
       } else {
         dispatch({
           type: 'INITIAL',
@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
         },
       });
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     initialize();

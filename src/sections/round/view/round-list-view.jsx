@@ -33,11 +33,10 @@ import RoundTableFiltersResult from '../round-table-filters-result';
 
 const TABLE_HEAD = [
   { id: 'roundName', label: 'Vòng thi' },
-  { id: 'maxMark', label: 'Điểm', width: 150, align: 'center' },
-  { id: 'timeStart', label: 'Bắt đầu', width: 150 },
-  { id: 'timeEnd', label: 'Kết thúc', width: 150 },
-  { id: 'timeAllow', label: 'Thời gian thi', width: 150, align: 'center' },
-  { id: 'codeTestFormGroup', label: 'Code', width: 80, align: 'center' },
+  { id: 'maxMark', label: 'Điểm', width: 280, align: 'center' },
+  { id: 'timeStart', label: 'Bắt đầu', width: 210 },
+  { id: 'timeEnd', label: 'Kết thúc', width: 180 },
+  { id: 'roundType', label: 'Thời gian thi', width: 180, align: 'center' },
   { id: '', width: 88 },
 ];
 

@@ -68,11 +68,11 @@ export function useNavData() {
             icon: ICONS.user,
           },
           // ACADEMIC TRANSCRIPT
-          {
-            title: t('bảng điểm'),
-            path: paths.dashboard.academicTranscript.root,
-            icon: ICONS.user,
-          },
+          // {
+          //   title: t('bảng điểm'),
+          //   path: paths.dashboard.academicTranscript.root,
+          //   icon: ICONS.user,
+          // },
           // // SYNC DATA
           // {
           //   title: t('đồng bộ dữ liệu'),

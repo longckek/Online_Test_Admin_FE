@@ -13,7 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-import { useGetCourses } from 'src/api/course';
+import { useGet10Courses } from 'src/api/course';
 import { generateActivationCode } from 'src/api/activation-code';
 
 import { useSnackbar } from 'src/components/snackbar';
@@ -24,7 +24,7 @@ import FormProvider, { RHFSelect } from 'src/components/hook-form';
 export default function ActivationCodeQuickNewForm({ open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { courses } = useGetCourses();
+  const { courses } = useGet10Courses();
 
   const [courseOptions, setCourseOptions] = useState([]);
 

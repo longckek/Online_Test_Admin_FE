@@ -22,11 +22,11 @@ import RoundQuickEditForm from './round-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function RoundTableRow({ row, onViewRow }) {
-  const { codeTestFormGroup, maxMark, name, showCorrectAnswer, showLabelAnswer, showMark, timeStart, timeEnd, timeAllow} = row;
+  const { name, isShowAnswer, isShowResult, isShowScore, timeStart, timeEnd, roundType} = row;
   const showOptions = [
-    { label: 'Hiện thị đáp án', value: showCorrectAnswer },
-    { label: 'Hiện thị nhãn', value: showLabelAnswer },
-    { label: 'Hiện thị điểm', value: showMark },
+    { label: 'Hiện thị đáp án', value: isShowAnswer },
+    { label: 'Hiện thị nhãn', value: isShowResult },
+    { label: 'Hiện thị điểm', value: isShowScore },
   ]
   const collapse = useBoolean();
 
@@ -38,7 +38,7 @@ export default function RoundTableRow({ row, onViewRow }) {
     <TableRow hover>
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
 
-      <TableCell align="center">{maxMark}</TableCell>
+      <TableCell align="center">{100}</TableCell>
 
       <TableCell>
         <ListItemText
@@ -66,8 +66,7 @@ export default function RoundTableRow({ row, onViewRow }) {
         />
       </TableCell>
 
-      <TableCell align="center">{timeAllow} phút</TableCell>
-      <TableCell align="center">{codeTestFormGroup}</TableCell>
+      <TableCell align="center">{roundType}</TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
       <IconButton
@@ -82,9 +81,9 @@ export default function RoundTableRow({ row, onViewRow }) {
           <Iconify icon="eva:arrow-ios-downward-fill" />
         </IconButton>
 
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+        {/* <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
           <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
+        </IconButton> */}
       </TableCell>
     </TableRow>
   )

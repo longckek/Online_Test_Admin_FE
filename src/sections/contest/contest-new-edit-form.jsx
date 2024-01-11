@@ -22,7 +22,7 @@ import FormProvider, {
   RHFTextField,
 } from 'src/components/hook-form';
 
-import ContestNewEditRound from './contest-new-edit-round';
+// import ContestNewEditRound from './contest-new-edit-round';
 
 
 // ----------------------------------------------------------------------
@@ -108,7 +108,7 @@ export default function ContestNewEditForm({ currentContest }) {
               <RHFTextField name="slug" label="Slug" disabled />
               <RHFTextField name="maxNumAttempt" label="Lượt thi tối đa" />
             </Box>
-            <ContestNewEditRound />
+            {/* <ContestNewEditRound /> */}
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
