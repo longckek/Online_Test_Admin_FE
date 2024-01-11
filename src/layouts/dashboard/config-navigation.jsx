@@ -73,17 +73,17 @@ export function useNavData() {
             path: paths.dashboard.academicTranscript.root,
             icon: ICONS.user,
           },
-          // SYNC DATA
-          {
-            title: t('đồng bộ dữ liệu'),
-            path: paths.dashboard.course.root,
-            icon: ICONS.user,
-            children: [
-              { title: t('đồng bộ khung đề'), path: paths.dashboard.syncData.testOutline },
-              { title: t('đồng bộ vòng thi'), path: paths.dashboard.syncData.round },
-              { title: t('đồng bộ gói đề'), path: paths.dashboard.syncData.testFormGroup },
-            ],
-          },
+          // // SYNC DATA
+          // {
+          //   title: t('đồng bộ dữ liệu'),
+          //   path: paths.dashboard.course.root,
+          //   icon: ICONS.user,
+          //   children: [
+          //     { title: t('đồng bộ khung đề'), path: paths.dashboard.syncData.testOutline },
+          //     { title: t('đồng bộ vòng thi'), path: paths.dashboard.syncData.round },
+          //     { title: t('đồng bộ gói đề'), path: paths.dashboard.syncData.testFormGroup },
+          //   ],
+          // },
         ],
       },
     ],

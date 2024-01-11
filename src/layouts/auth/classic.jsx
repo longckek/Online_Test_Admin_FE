@@ -14,7 +14,6 @@ import Logo from 'src/components/logo';
 // ----------------------------------------------------------------------
 
 export default function AuthClassicLayout({ children, image, title }) {
-
   const theme = useTheme();
 
   const mdUp = useResponsive('up', 'md');
@@ -90,7 +89,6 @@ export default function AuthClassicLayout({ children, image, title }) {
       {renderLogo}
 
       {mdUp && renderSection}
-
       {renderContent}
     </Stack>
   );

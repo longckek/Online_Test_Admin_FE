@@ -1,14 +1,11 @@
-
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 
-import { AuthGuard } from 'src/auth/guard';
+// import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 import { LoadingScreen } from 'src/components/loading-screen';
-
-
 
 // ----------------------------------------------------------------------
 // COURSE
@@ -26,13 +23,18 @@ const ContestEditPage = lazy(() => import('src/pages/dashboard/contest/edit'));
 // ROUND
 const RoundListPage = lazy(() => import('src/pages/dashboard/round/list'));
 // ACADEMIC TRANSCRIPT
-const AcademicTranscriptListPage = lazy(() => import('src/pages/dashboard/academic-transcript/list'));
-const AcademicTranscriptDetailsPage = lazy(() => import('src/pages/dashboard/academic-transcript/details'));
+const AcademicTranscriptListPage = lazy(() =>
+  import('src/pages/dashboard/academic-transcript/list')
+);
+const AcademicTranscriptDetailsPage = lazy(() =>
+  import('src/pages/dashboard/academic-transcript/details')
+);
 // SYNC DATA
 const SyncDataTestOutlinePage = lazy(() => import('src/pages/dashboard/sync-data/test-outline'));
 const SyncDataRoundPage = lazy(() => import('src/pages/dashboard/sync-data/round'));
-const SyncDataTestFormGroupPage = lazy(() => import('src/pages/dashboard/sync-data/test-form-group'));
-
+const SyncDataTestFormGroupPage = lazy(() =>
+  import('src/pages/dashboard/sync-data/test-form-group')
+);
 
 // ----------------------------------------------------------------------
 
@@ -40,13 +42,13 @@ export const dashboardRoutes = [
   {
     path: 'dashboard',
     element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
+      // <AuthGuard>
+      <DashboardLayout>
+        <Suspense fallback={<LoadingScreen />}>
+          <Outlet />
+        </Suspense>
+      </DashboardLayout>
+      // </AuthGuard>
     ),
     children: [
       {

@@ -24,7 +24,9 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow }) {
-  const { name, price, description, createdAt, mockContest } = row;
+  const { name, price, description, createdAt } = row;
+
+  console.log('winter: ', row);
 
   const confirm = useBoolean();
 
@@ -35,9 +37,7 @@ export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow 
   const renderPrimary = (
     <TableRow hover>
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
-
       <TableCell>{fCurrency(price)}</TableCell>
-
       <TableCell>
         <ListItemText
           primary={format(new Date(createdAt), 'dd MMM yyyy', { locale: vi })}
@@ -50,11 +50,8 @@ export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow 
           }}
         />
       </TableCell>
-
       <TableCell sx={{ whiteSpace: 'break-spaces' }}>{description}</TableCell>
-
-      <TableCell align="center">{mockContest.length}</TableCell>
-
+      <TableCell align="center">{0}</TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton
           color={collapse.value ? 'inherit' : 'default'}
@@ -65,7 +62,7 @@ export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow 
             }),
           }}
         >
-          {mockContest.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />}
+          {/* {mockContest.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />} */}
         </IconButton>
 
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -73,57 +70,57 @@ export default function CourseTableRow({ row, onViewRow, onEditRow, onDeleteRow 
         </IconButton>
       </TableCell>
     </TableRow>
-  )
+  );
 
-  const renderSecondary = (
-    <TableRow>
-      <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
-        <Collapse
-          in={collapse.value}
-          timeout="auto"
-          unmountOnExit
-          sx={{ bgcolor: 'background.neutral' }}
-        >
-          <Stack component={Paper} sx={{ m: 1.5 }}>
-            {mockContest.map((item) => (
-              <Stack
-                key={item.id}
-                direction="row"
-                alignItems="center"
-                sx={{
-                  p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
-                  '&:not(:last-of-type)': {
-                    borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
-                  },
-                }}
-              >
-                <ListItemText
-                  primary={item.name}
-                  secondary={`Tổng điểm: ${item.totalMark || 0}`}
-                  primaryTypographyProps={{
-                    typography: 'body2',
-                  }}
-                  secondaryTypographyProps={{
-                    component: 'span',
-                    color: 'text.disabled',
-                    mt: 0.5,
-                  }}
-                />
+  // const renderSecondary = (
+  //   <TableRow>
+  //     <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+  //       <Collapse
+  //         in={collapse.value}
+  //         timeout="auto"
+  //         unmountOnExit
+  //         sx={{ bgcolor: 'background.neutral' }}
+  //       >
+  //         <Stack component={Paper} sx={{ m: 1.5 }}>
+  //           {mockContest.map((item) => (
+  //             <Stack
+  //               key={item.id}
+  //               direction="row"
+  //               alignItems="center"
+  //               sx={{
+  //                 p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+  //                 '&:not(:last-of-type)': {
+  //                   borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+  //                 },
+  //               }}
+  //             >
+  //               <ListItemText
+  //                 primary={item.name}
+  //                 secondary={`Tổng điểm: ${item.totalMark || 0}`}
+  //                 primaryTypographyProps={{
+  //                   typography: 'body2',
+  //                 }}
+  //                 secondaryTypographyProps={{
+  //                   component: 'span',
+  //                   color: 'text.disabled',
+  //                   mt: 0.5,
+  //                 }}
+  //               />
 
-                <Box sx={{ width: 110, textAlign: 'right' }}>Lượt thi: {item.maxNumAttempt}</Box>
-              </Stack>
-            ))}
-          </Stack>
-        </Collapse>
-      </TableCell>
-    </TableRow>
-  )
+  //               <Box sx={{ width: 110, textAlign: 'right' }}>Lượt thi: {item.maxNumAttempt}</Box>
+  //             </Stack>
+  //           ))}
+  //         </Stack>
+  //       </Collapse>
+  //     </TableCell>
+  //   </TableRow>
+  // )
 
   return (
     <>
       {renderPrimary}
 
-      {renderSecondary}
+      {/* {renderSecondary} */}
 
       <CustomPopover
         open={popover.open}

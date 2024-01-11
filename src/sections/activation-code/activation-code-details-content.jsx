@@ -21,7 +21,9 @@ export default function ActivationCodeDetailsContent({ activationCode }) {
     <Stack component={Card} spacing={3} sx={{ p: 3 }}>
       <Typography variant="h4">Code: {codeActive}</Typography>
 
-      { activationDate && (<Typography variant="h6">Ngày kích hoạt: {fDate(activationDate)}</Typography>)}
+      {activationDate && (
+        <Typography variant="h6">Ngày kích hoạt: {fDate(activationDate)}</Typography>
+      )}
 
       <Stack
         component={Paper}
@@ -30,7 +32,7 @@ export default function ActivationCodeDetailsContent({ activationCode }) {
         direction="row"
         sx={{ p: 3, borderRadius: 2, mt: 3 }}
       >
-        { student ? (
+        {student ? (
           <>
             <Avatar
               alt={student.user.name}
@@ -48,7 +50,9 @@ export default function ActivationCodeDetailsContent({ activationCode }) {
               <Typography variant="body2">{student.school}</Typography>
             </Stack>
           </>
-        ): "Chưa có học sinh đăng kí"}
+        ) : (
+          'Chưa có học sinh đăng kí'
+        )}
       </Stack>
     </Stack>
   );

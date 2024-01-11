@@ -14,7 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 import { useGetCourses } from 'src/api/course';
-import { generateActivationCode } from 'src/api/activation-code'
+import { generateActivationCode } from 'src/api/activation-code';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSelect } from 'src/components/hook-form';
@@ -58,17 +58,14 @@ export default function ActivationCodeQuickNewForm({ open, onClose }) {
 
   const handleSelectCourse = useCallback(
     (option) => {
-      setValue(
-        `id`,
-        option
-      );
+      setValue(`id`, option);
     },
     [setValue]
   );
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await generateActivationCode(data)
+      await generateActivationCode(data);
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       onClose();
@@ -97,20 +94,15 @@ export default function ActivationCodeQuickNewForm({ open, onClose }) {
         <DialogTitle>Tạo mã kích hoạt</DialogTitle>
 
         <DialogContent>
-          <Box
-            rowGap={3}
-            columnGap={2}
-            display="grid"
-          >
-
+          <Box rowGap={3} columnGap={2} display="grid">
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
-            <RHFSelect
-              name="name"
-              label="Khóa học"
-              InputLabelProps={{ shrink: true }}
-            >
+            <RHFSelect name="name" label="Khóa học" InputLabelProps={{ shrink: true }}>
               {courseOptions.map((course) => (
-                <MenuItem key={course.id} value={course.name} onClick={() => handleSelectCourse(course.id)}>
+                <MenuItem
+                  key={course.id}
+                  value={course.name}
+                  onClick={() => handleSelectCourse(course.id)}
+                >
                   {course.name}
                 </MenuItem>
               ))}
@@ -119,10 +111,13 @@ export default function ActivationCodeQuickNewForm({ open, onClose }) {
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={() => {
-            reset();
-            onClose();
-          }}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              reset();
+              onClose();
+            }}
+          >
             Hủy
           </Button>
 
