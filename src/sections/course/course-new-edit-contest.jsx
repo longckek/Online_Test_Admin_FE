@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-import { useGetContests } from 'src/api/contest'
+import { useGet10Contests } from 'src/api/contest'
 
 import Iconify from 'src/components/iconify';
 import { RHFSelect } from 'src/components/hook-form';
@@ -16,7 +16,7 @@ import { RHFSelect } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function CourseNewEditContest() {
-  const { contests } = useGetContests();
+  const { contests } = useGet10Contests();
 
   const { control, setValue } = useFormContext();
 

@@ -23,6 +23,25 @@ export function useGetContests() {
   return memoizedValue;
 }
 
+export function useGet10Contests() {
+  const URL = [endpoints.contest.list, { params: { limit: 10 } }];
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      contests: data?.result || [],
+      contestsLoading: isLoading,
+      contestsError: error,
+      contestsValidating: isValidating,
+      contestsEmpty: !isLoading && !data?.result.length,
+    }),
+    [data?.result, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
 export function useGetContest(contestId) {
   const URL = contestId ? `${endpoints.contest.details}/${contestId}` : '';
 
